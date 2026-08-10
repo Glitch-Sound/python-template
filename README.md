@@ -24,3 +24,10 @@ uv add typer loguru pydantic-settings
 ```bash
 uv add --dev pytest pytest-mock ruff
 ```
+
+OpenSpec導入
+```bash
+npm install --save-dev @fission-ai/openspec@latest
+npx openspec init --tools codex,github-copilot,claude
+```
+
