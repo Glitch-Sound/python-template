@@ -21,9 +21,9 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-      - id: ty
-        name: ty type check
-        entry: uv run --locked ty check
+      - id: pyright
+        name: Pyright type check
+        entry: uv run --locked pyright
         language: system
         pass_filenames: false
         always_run: true

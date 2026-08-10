@@ -52,7 +52,7 @@ uv run --locked ruff format .
 型チェックを実行します。
 
 ```bash
-uv run --locked ty check
+uv run --locked pyright
 ```
 
 `pre-commit` フックを有効化し、すべてのチェックを実行します。
@@ -68,7 +68,7 @@ uv run --locked pre-commit run --all-files
 | --- | --- |
 | `Ruff lint` | `Python` コードを静的解析します。<br />バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認し、自動修正可能なものは修正します。 |
 | `Ruff format` | `Python` コードが `Ruff` のフォーマットに従っているか確認します。 |
-| `ty` | 型の不整合を検査します。 |
+| `Pyright` | 型の不整合を検査します。 |
 | `pytest` | テストを実行します。<br />テストの失敗や収集エラーがある場合は、コミットを中断します。 |
 | `Safety` | 依存パッケージを `Safety` の脆弱性データベースと照合します。 |
 | `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
@@ -105,7 +105,7 @@ uv add typer loguru pydantic-settings
 開発、テスト、静的解析で使用するパッケージです。
 
 ```bash
-uv add --dev pre-commit pytest pytest-mock ruff safety ty
+uv add --dev pre-commit pyright pytest pytest-mock ruff safety
 ```
 
 | パッケージ | 説明 |
@@ -114,7 +114,7 @@ uv add --dev pre-commit pytest pytest-mock ruff safety ty
 | `pytest-mock` | `pytest` からモックを扱いやすくするプラグインです。<br />`mocker` フィクスチャを利用して、関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
 | `ruff` | 高速な `Python` リンター／フォーマッターです。<br />コード品質のチェックとコードフォーマットを担当します。 |
 | `safety` | 依存パッケージを既知の脆弱性データベースと照合します。 |
-| `ty` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
+| `pyright` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
 
 #### 開発ツール
 
@@ -135,7 +135,7 @@ Ruff
 └── Format
     └── コードスタイルを統一
 
-ty
+Pyright
 └── Type Check
     └── 型ヒントの不整合を静的解析
 ```
