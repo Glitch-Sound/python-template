@@ -1,42 +1,41 @@
 default_stages: [pre-commit]
 
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: check-added-large-files
-        args: [--maxkb=1000]
-      - id: check-merge-conflict
-      - id: check-toml
-      - id: check-yaml
-      - id: detect-private-key
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-
   - repo: local
     hooks:
+      - id: repository-checks
+        name: Repository checks
+        entry: uv run --locked python scripts/check_repository.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: ruff-check
         name: Ruff lint
-        entry: uv run ruff check --fix
+        entry: uv run --locked ruff check --fix .
         language: system
-        types: [python]
         pass_filenames: false
+        always_run: true
       - id: ruff-format
         name: Ruff format
-        entry: uv run ruff format --check
+        entry: uv run --locked ruff format --check .
         language: system
-        types: [python]
         pass_filenames: false
+        always_run: true
+      - id: ty
+        name: ty type check
+        entry: uv run --locked ty check
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: pytest
         name: pytest
-        entry: >-
-          bash -c 'uv run pytest; status=$?; [ "$status" -eq 0 ] || [ "$status" -eq 5 ]'
+        entry: uv run --locked pytest
         language: system
         pass_filenames: false
         always_run: true
       - id: safety
         name: Safety dependency scan
-        entry: uv run safety check --full-report
+        entry: uv run --locked safety check --full-report
         language: system
         pass_filenames: false
         always_run: true

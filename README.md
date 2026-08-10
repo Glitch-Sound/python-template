@@ -19,7 +19,7 @@
 依存関係をインストールします。
 
 ```bash
-uv sync
+uv sync --locked
 npm ci
 ```
 
@@ -34,43 +34,44 @@ uv run python-template
 テストを実行します。
 
 ```bash
-uv run pytest
+uv run --locked pytest
 ```
 
 Lintを実行します。
 
 ```bash
-uv run ruff check .
+uv run --locked ruff check .
 ```
 
 Formatを実行します。
 
 ```bash
-uv run ruff format .
+uv run --locked ruff format .
 ```
 
 型チェックを実行します。
 
 ```bash
-uv run ty check
+uv run --locked ty check
 ```
 
 pre-commitフックを有効化し、すべてのチェックを実行します。
 
 ```bash
-uv run pre-commit install
-uv run pre-commit run --all-files
+uv run --locked pre-commit install
+uv run --locked pre-commit run --all-files
 ```
 
 コミット時には以下をチェックします。
 
 | Check | 内容 |
 | --- | --- |
-| Ruff lint | Pythonコードを静的解析し、自動修正できる問題を修正します。 |
+| Ruff lint | Pythonコードを静的解析します。バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認し、自動修正可能なものは修正します。 |
 | Ruff format | PythonコードがRuffのフォーマットに従っているか確認します。 |
-| pytest | テストを実行します。テストが未作成の場合のみ成功として扱い、失敗・収集エラーはコミットを中断します。 |
-| Safety | インストール済み依存パッケージの既知の脆弱性を検査します。 |
-| Basic file checks | 大きすぎる追加ファイル、マージ競合の痕跡、不正なYAML/TOML、秘密鍵を検出します。末尾改行の追加と行末空白の削除も行います。 |
+| ty | 型の不整合を検査します。 |
+| pytest | テストを実行します。失敗・収集エラーはコミットを中断します。 |
+| Safety | 依存パッケージを Safety の脆弱性データベースと照合します。 |
+| Repository checks | 1 MB超のファイル、マージ競合の痕跡、不正なYAML/TOML、秘密鍵、末尾改行・行末空白を検出します。 |
 
 ## Pre-configured
 
@@ -112,7 +113,7 @@ uv add --dev pre-commit pytest pytest-mock ruff safety ty
 | `pytest` | Pythonのテストフレームワーク。シンプルな`assert`を使って単体テストや結合テストを記述できます。 |
 | `pytest-mock` | pytestからモックを扱いやすくするプラグイン。`mocker` fixtureを利用して関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
 | `ruff` | 高速なPython Linter / Formatter。コード品質のチェックとコードフォーマットを担当します。 |
-| `safety` | 依存パッケージに既知の脆弱性がないか検査します。 |
+| `safety` | 依存パッケージを既知の脆弱性データベースと照合します。 |
 | `ty` | Pythonの静的型チェッカー。型ヒントを解析し、実行前に型の不整合を検出します。 |
 
 #### Development Tools
@@ -178,6 +179,8 @@ python-template/
 ```
 
 ## Dependency Management
+
+公開 PyPI および npm レジストリへの直接接続は行いません。依存関係の追加・更新は、社内承認済みのパッケージレジストリまたはキャッシュを設定した環境でのみ実施してください。
 
 Pythonパッケージを追加します。
 
