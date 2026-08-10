@@ -1,20 +1,20 @@
 # Python Template
 
-`uv` + OpenSpec を使用した Python 開発用テンプレート。
+`uv` と `OpenSpec` を使用した、`Python` 開発用テンプレートです。
 
-## Environment
+## 開発環境
 
-- Python 3.13
-- uv
-- OpenSpec
+- `Python` 3.13
+- `uv`
+- `OpenSpec`
 
-### AI Coding Agents
+### 対応 AI コーディングエージェント
 
-- OpenAI Codex
-- GitHub Copilot
-- Claude Code
+- `OpenAI Codex`
+- `GitHub Copilot`
+- `Claude Code`
 
-## Quick Start
+## クイックスタート
 
 依存関係をインストールします。
 
@@ -29,7 +29,7 @@ npm ci
 uv run python-template
 ```
 
-## Development
+## 開発
 
 テストを実行します。
 
@@ -37,13 +37,13 @@ uv run python-template
 uv run --locked pytest
 ```
 
-Lintを実行します。
+リントを実行します。
 
 ```bash
 uv run --locked ruff check .
 ```
 
-Formatを実行します。
+フォーマットを実行します。
 
 ```bash
 uv run --locked ruff format .
@@ -55,29 +55,29 @@ uv run --locked ruff format .
 uv run --locked ty check
 ```
 
-pre-commitフックを有効化し、すべてのチェックを実行します。
+`pre-commit` フックを有効化し、すべてのチェックを実行します。
 
 ```bash
 uv run --locked pre-commit install
 uv run --locked pre-commit run --all-files
 ```
 
-コミット時には以下をチェックします。
+コミット時には、以下のチェックを実行します。
 
-| Check | 内容 |
+| チェック | 内容 |
 | --- | --- |
-| Ruff lint | Pythonコードを静的解析します。バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認し、自動修正可能なものは修正します。 |
-| Ruff format | PythonコードがRuffのフォーマットに従っているか確認します。 |
-| ty | 型の不整合を検査します。 |
-| pytest | テストを実行します。失敗・収集エラーはコミットを中断します。 |
-| Safety | 依存パッケージを Safety の脆弱性データベースと照合します。 |
-| Repository checks | 1 MB超のファイル、マージ競合の痕跡、不正なYAML/TOML、秘密鍵、末尾改行・行末空白を検出します。 |
+| `Ruff lint` | `Python` コードを静的解析します。<br />バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認し、自動修正可能なものは修正します。 |
+| `Ruff format` | `Python` コードが `Ruff` のフォーマットに従っているか確認します。 |
+| `ty` | 型の不整合を検査します。 |
+| `pytest` | テストを実行します。<br />テストの失敗や収集エラーがある場合は、コミットを中断します。 |
+| `Safety` | 依存パッケージを `Safety` の脆弱性データベースと照合します。 |
+| `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
 
-## Pre-configured
+## 事前設定
 
-このテンプレートは以下のコマンドで構築しています。
+このテンプレートは、以下のコマンドを用いて作成しています。
 
-### Create Project
+### プロジェクトの作成
 
 ```bash
 uv init python-template \
@@ -86,7 +86,7 @@ uv init python-template \
   --python "==3.13"
 ```
 
-### Application Dependencies
+### アプリケーションの依存関係
 
 アプリケーションの実行時に使用するパッケージです。
 
@@ -94,13 +94,13 @@ uv init python-template \
 uv add typer loguru pydantic-settings
 ```
 
-| Package | Description |
+| パッケージ | 説明 |
 | --- | --- |
-| `typer` | 型ヒントを利用してCLIアプリケーションを構築するためのライブラリ。コマンド、引数、オプション、ヘルプなどを簡潔に定義できます。 |
-| `loguru` | Python標準の`logging`よりシンプルなAPIでログ出力を扱うためのライブラリ。ログレベル、ファイル出力、ローテーションなどを簡単に設定できます。 |
-| `pydantic-settings` | 環境変数や`.env`などからアプリケーション設定を読み込み、Pydanticによる型検証を行うためのライブラリ。 |
+| `typer` | 型ヒントを利用して `CLI` アプリケーションを構築するためのライブラリです。<br />コマンド、引数、オプション、ヘルプなどを簡潔に定義できます。 |
+| `loguru` | `Python` 標準の `logging` よりシンプルな `API` でログ出力を扱うためのライブラリです。<br />ログレベル、ファイル出力、ローテーションなどを簡単に設定できます。 |
+| `pydantic-settings` | 環境変数や `.env` などからアプリケーション設定を読み込み、`Pydantic` による型検証を行うためのライブラリです。 |
 
-### Development Dependencies
+### 開発用の依存関係
 
 開発、テスト、静的解析で使用するパッケージです。
 
@@ -108,15 +108,15 @@ uv add typer loguru pydantic-settings
 uv add --dev pre-commit pytest pytest-mock ruff safety ty
 ```
 
-| Package | Description |
+| パッケージ | 説明 |
 | --- | --- |
-| `pytest` | Pythonのテストフレームワーク。シンプルな`assert`を使って単体テストや結合テストを記述できます。 |
-| `pytest-mock` | pytestからモックを扱いやすくするプラグイン。`mocker` fixtureを利用して関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
-| `ruff` | 高速なPython Linter / Formatter。コード品質のチェックとコードフォーマットを担当します。 |
+| `pytest` | `Python` のテストフレームワークです。<br />シンプルな `assert` を使って単体テストや結合テストを記述できます。 |
+| `pytest-mock` | `pytest` からモックを扱いやすくするプラグインです。<br />`mocker` フィクスチャを利用して、関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
+| `ruff` | 高速な `Python` リンター／フォーマッターです。<br />コード品質のチェックとコードフォーマットを担当します。 |
 | `safety` | 依存パッケージを既知の脆弱性データベースと照合します。 |
-| `ty` | Pythonの静的型チェッカー。型ヒントを解析し、実行前に型の不整合を検出します。 |
+| `ty` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
 
-#### Development Tools
+#### 開発ツール
 
 各ツールの主な役割は以下のとおりです。
 
@@ -140,25 +140,25 @@ ty
     └── 型ヒントの不整合を静的解析
 ```
 
-### OpenSpec
+### `OpenSpec`
 
-OpenSpecはプロジェクトローカルの開発依存としてインストールしています。
+`OpenSpec` は、プロジェクトローカルの開発用依存関係としてインストールしています。
 
 ```bash
 npm install --save-dev @fission-ai/openspec@latest
 ```
 
-Codex、GitHub Copilot、Claude Code向けにOpenSpecを初期化しています。
+`Codex`、`GitHub Copilot`、`Claude Code` 向けに `OpenSpec` を初期化しています。
 
 ```bash
 npx openspec init --tools codex,github-copilot,claude
 ```
 
-## Project Structure
+## プロジェクト構成
 
 ```text
 python-template/
-├── .agents/              # AI agent skills
+├── .agents/              # AI エージェント用スキル
 ├── .claude/              # Claude Code
 ├── .github/              # GitHub Copilot
 ├── openspec/             # OpenSpec specifications
@@ -168,27 +168,28 @@ python-template/
 │
 ├── tests/
 │
-├── pyproject.toml        # Python project configuration
-├── uv.lock               # Python dependency lock
-├── .python-version       # Python version
+├── pyproject.toml        # Python プロジェクト設定
+├── uv.lock               # Python の依存関係ロックファイル
+├── .python-version       # Python バージョン
 │
-├── package.json          # OpenSpec dependency
-├── package-lock.json     # Node.js dependency lock
+├── package.json          # OpenSpec の依存関係
+├── package-lock.json     # Node.js の依存関係ロックファイル
 │
 └── README.md
 ```
 
-## Dependency Management
+## 依存関係の管理
 
-公開 PyPI および npm レジストリへの直接接続は行いません。依存関係の追加・更新は、社内承認済みのパッケージレジストリまたはキャッシュを設定した環境でのみ実施してください。
+公開 `PyPI` および `npm` レジストリへの直接接続は行いません。<br />
+依存関係の追加・更新は、社内承認済みのパッケージレジストリまたはキャッシュを設定した環境でのみ実施してください。
 
-Pythonパッケージを追加します。
+`Python` パッケージを追加します。
 
 ```bash
 uv add <package>
 ```
 
-開発用パッケージを追加します。
+開発用のパッケージを追加します。
 
 ```bash
 uv add --dev <package>
@@ -200,7 +201,7 @@ uv add --dev <package>
 uv sync
 ```
 
-OpenSpecを含むNode.js依存関係を同期します。
+`OpenSpec` を含む `Node.js` の依存関係を同期します。
 
 ```bash
 npm ci
