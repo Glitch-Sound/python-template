@@ -1,32 +1,33 @@
-schema: spec-driven
+# 独自カスタムスキーマを指定.
+schema: my-workflow
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# コンテキスト.
+context: |
+  # 【重要】最優先プロジェクト規約
+  AIエージェントは以下の3つのファイルの内容を【必ず読み込み、その中身をこのコンテキストに直接注入(インクルード)】して処理すること。
+  記載されたプロダクトビジョン、技術スタック、ディレクトリ構造規約から1文字たりとも逸脱してはならない。
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  - @openspec/product.md
+  - @openspec/tech.md
+  - @openspec/structure.md
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  # 【絶対遵守】最重要メタ規約(読み飛ばし防止のためここに直接明記)
+  - すべての成果物(仕様、設計、タスク)およびチャットの応答は【日本語】で行うこと。
+
+## 追加ルール.
+#rules:
+#  specs:
+#    - ""
+#  design:
+#    - ""
+#  tasks:
+#    - ""
+
+## 適用・保存時の運用リスト.
+#operations:
+#  apply:
+#    guidance:
+#      - ""
+#  archive:
+#    guidance:
+#      - ""
