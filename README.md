@@ -110,14 +110,14 @@ python-template/
 
 #### 4.2.1. 調査・検討
 ```text
-$ospx-explore [テーマ]
+$openspec-explore [テーマ]
 ```
 どのように進めていくか、チャットベースで相談してください。
 
 
 #### 4.2.2. 作業ディレクトリ生成
 ```text
-$ospx-new [変更名]
+$openspec-new [変更名]
 ```
 `openspec/changes/変更名/` というディレクトリが生成されます。
 
@@ -129,35 +129,35 @@ $ospx-new [変更名]
 
 #### 4.2.4. ドキュメント生成
 ```text
-$ospx-ff [変更名] [input.mdを参照]
+$openspec-ff [変更名] [input.mdを参照]
 ```
 `input.md` を元に実装に必要なドキュメントを生成します。
 
 
 #### 4.2.5. ドキュメント改善
 ```text
-$ospx-update [変更名] [修正内容]
+$openspec-update [変更名] [修正内容]
 ```
 生成したドキュメントを壁打ちしながら品質を向上させます。
 
 
 #### 4.2.6. 実装
 ```text
-$ospx-apply [変更名]
+$openspec-apply [変更名]
 ```
 生成したドキュメントから実装を行います。
 
 
 #### 4.2.7. 検証
 ```text
-$ospx-verify [変更名]
+$openspec-verify [変更名]
 ```
 実装内容が問題ないか検証します。
 
 
 #### 4.2.8. 仕様反映
 ```text
-$ospx-archive [変更名]
+$openspec-archive [変更名]
 ```
 変更内容を正式仕様として反映します。
 
