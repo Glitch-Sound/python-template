@@ -1,21 +1,20 @@
 # Python Template
-
 `uv` と `OpenSpec` を使用した `Python` 開発用テンプレートです。
 
-## 開発環境
 
+## 1. 開発環境
 - `Python` 3.13
 - `uv`
 - `OpenSpec`
 
-### 対応 AI コーディングエージェント
 
+### 1.1. 対応 AI コーディングエージェント
 - `OpenAI Codex`
 - `GitHub Copilot`
 - `Claude Code`
 
-## クイックスタート
 
+## 2. クイックスタート
 依存関係をインストールします。
 
 ```bash
@@ -29,8 +28,7 @@ npm ci
 uv run python-template
 ```
 
-## 開発
-
+## 3. 開発
 テストを実行します。
 
 ```bash
@@ -74,8 +72,7 @@ uv run --locked pre-commit run --all-files
 | `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
 
 
-## SDD
-
+## 4. SDD
 各ユースケースでの開発の方法です。<br />
 なお、ここでは `Codex` での手順を基準とします。
 
@@ -95,39 +92,81 @@ python-template/
     └── structure.md      # 構造定義
 ```
 
-### 初期設定
 
+### 4.1. 初期設定
 事前に以下プロダクト全体に関連する定義を行なってください。
 
-#### config.yaml
+| ファイル | 定義内容 |
+| --- | --- |
+| config.yaml | 追加ルール、適用・保存時の運用リストなど |
+| product.md | 目的・スコープ・中核機能・ユースケース・ドメインなど |
+| tech.md | アーキテクチャ・主要ライブラリ・開発基準・テストなど |
+| structure.md | ディレクトリ構造・命名規則・配置原則など |
 
-追加ルール、適用・保存時の運用リストなどあれば定義してください。
 
-#### product.md
+### 4.2. 開発の流れ
+以下の順番で開発を進めてください。
 
-何を作るかを定義してください。
-目的・スコープ・中核機能・ユースケース・ドメインなどを記載します。
 
-#### tech.md
+#### 4.2.1. 調査・検討
+```text
+$ospx-explore [テーマ]
+```
+どのように進めていくか、チャットベースで相談してください。
 
-どう作るかの制約を定義してください。
-アーキテクチャ・主要ライブラリ・開発基準・テストなどを記載します。
 
-#### structure.md
+#### 4.2.2. 作業ディレクトリ生成
+```text
+$ospx-new [変更名]
+```
+`openspec/changes/変更名/` というディレクトリが生成されます。
 
-どこになにを置くかを定義してください。
-ディレクトリ構造・命名規則・配置原則などを記載します。
 
-### TODO
+#### 4.2.3. 要件概要書を格納
+生成した `openspec/changes/変更名/` 内に要件概要書(`input.md`)を格納してください。
+`input.md` には要件定義書、設計書、実装に必要な情報を記載します。
 
-SSDの進め方を記載予定です。
 
-## 事前設定
+#### 4.2.4. ドキュメント生成
+```text
+$ospx-ff [変更名] [input.mdを参照]
+```
+`input.md` を元に実装に必要なドキュメントを生成します。
 
+
+#### 4.2.5. ドキュメント改善
+```text
+$ospx-update [変更名] [修正内容]
+```
+生成したドキュメントを壁打ちしながら品質を向上させます。
+
+
+#### 4.2.6. 実装
+```text
+$ospx-apply [変更名]
+```
+生成したドキュメントから実装を行います。
+
+
+#### 4.2.7. 検証
+```text
+$ospx-verify [変更名]
+```
+実装内容が問題ないか検証します。
+
+
+#### 4.2.8. 仕様反映
+```text
+$ospx-archive [変更名]
+```
+変更内容を正式仕様として反映します。
+
+
+## 5. 事前設定
 このテンプレートは、以下のコマンドを用いて作成しています。
 
-### プロジェクトの作成
 
+### 5.1. プロジェクトの作成
 ```bash
 uv init python-template \
   --name python_template \
@@ -135,8 +174,8 @@ uv init python-template \
   --python "==3.13"
 ```
 
-### アプリケーションの依存関係
 
+### 5.2. アプリケーションの依存関係
 アプリケーションの実行時に使用するパッケージです。
 
 ```bash
@@ -149,8 +188,8 @@ uv add typer loguru pydantic-settings
 | `loguru` | `Python` 標準の `logging` よりシンプルな `API` でログ出力を扱うためのライブラリです。<br />ログレベル、ファイル出力、ローテーションなどを簡単に設定できます。 |
 | `pydantic-settings` | 環境変数や `.env` などからアプリケーション設定を読み込み、`Pydantic` による型検証を行うためのライブラリです。 |
 
-### 開発用の依存関係
 
+### 5.3. 開発用の依存関係
 開発、テスト、静的解析で使用するパッケージです。
 
 ```bash
@@ -165,8 +204,8 @@ uv add --dev pre-commit pyright pytest pytest-mock ruff safety
 | `safety` | 依存パッケージを既知の脆弱性データベースと照合します。 |
 | `pyright` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
 
-#### 開発ツール
 
+#### 5.3.1. 開発ツール
 各ツールの主な役割は以下のとおりです。
 
 ```text
@@ -189,9 +228,9 @@ Pyright
     └── 型ヒントの不整合を静的解析
 ```
 
-### `OpenSpec`
 
-`OpenSpec` は、プロジェクトローカルの開発用依存関係としてインストールしています。
+### 5.4. OpenSpec
+`OpenSpec` はプロジェクトローカルの開発用依存関係としてインストールしています。
 
 ```bash
 npm install --save-dev @fission-ai/openspec@latest
@@ -203,8 +242,23 @@ npm install --save-dev @fission-ai/openspec@latest
 npx openspec init --tools codex,github-copilot,claude
 ```
 
-## プロジェクト構成
+`OpenSpec` の拡張機能を有効にします。
 
+```bash
+npx openspec config profile
+
+> workflows only
+
+? Select workdlows to make available:
+[x] New change
+[x] Fast-forword
+[x] Verify change
+
+? Apply chamges to this project now?
+Y
+```
+
+## 6. プロジェクト構成
 ```text
 python-template/
 ├── .agents/              # AI エージェント用スキル
@@ -227,8 +281,8 @@ python-template/
 └── README.md
 ```
 
-## 依存関係の管理
 
+## 7. 依存関係の管理
 公開 `PyPI` および `npm` レジストリへの直接接続は行いません。<br />
 依存関係の追加・更新は、社内承認済みのパッケージレジストリまたはキャッシュを設定した環境でのみ実施してください。
 
