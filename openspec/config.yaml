@@ -1,4 +1,5 @@
-# OpenSpec で使用するプロジェクト固有のワークフロー。
+# 新規 change 作成時に使用するプロジェクト既定のワークフロー。
+# `openspec new change` はこの値を読み、各 change の `.openspec.yaml` に記録する。
 schema: my-workflow
 
 # すべての成果物の生成・更新時に読み込む共通コンテキスト。
@@ -48,5 +49,5 @@ operations:
       - 実装後は少なくとも `uv run --locked ruff check .`、`uv run --locked ruff format --check .`、`uv run --locked pyright`、`uv run --locked pytest` を実行する。
   archive:
     guidance:
-      - アーカイブ前に `openspec validate --strict` を実行し、proposal の capability と spec の差分が対応していることを確認する。
+      - アーカイブ前に `openspec validate <change-name> --strict` を実行し、proposal の capability と spec の差分が対応していることを確認する。
       - tasks の未完了項目、未解決の Open Questions、未検証の受け入れ条件がある場合は、完了または明示的な合意なしにアーカイブしない。

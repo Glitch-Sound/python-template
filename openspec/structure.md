@@ -50,7 +50,7 @@ python-template/
 
 ### 設定・依存関係・スクリプト
 
-- Python の依存関係、対応 Python バージョン、ツール設定は `pyproject.toml` を唯一の定義元とする。依存関係を変更したら `uv.lock` を更新する。
+- Python の依存関係、対応 Python バージョンの互換性範囲、ツール設定は `pyproject.toml` を唯一の定義元とする。`.python-version` はローカル開発で使用する Python バージョンを固定する補助設定であり、`pyproject.toml` の対応範囲と常に一致させる。依存関係を変更したら `uv.lock` を更新する。
 - Node.js の開発依存関係は `package.json` に定義し、変更時は `package-lock.json` を更新する。
 - リポジトリ運用や反復作業のスクリプトは `scripts/` に置く。実行時コードを `scripts/` から import しない。
 - 環境依存の設定値は環境変数またはローカルの `.env` から与え、`.env` に機密情報をコミットしない。

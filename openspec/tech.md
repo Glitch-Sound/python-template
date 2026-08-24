@@ -95,4 +95,4 @@ uv run --locked pytest
 uv run --locked pre-commit run --all-files
 ```
 
-依存関係を変更した場合は、加えて `uv sync --locked`（Python）または `npm ci`（Node.js）で再現可能に同期できることを確認する。OpenSpec の変更はアーカイブ前に `openspec validate --strict` を実行する。
+依存関係を変更した場合は、加えて `uv sync --locked`（Python）または `npm ci`（Node.js）で再現可能に同期できることを確認する。OpenSpec の変更はアーカイブ前に `openspec validate <change-name> --strict` を実行する。

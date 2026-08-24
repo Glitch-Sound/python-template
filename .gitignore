@@ -11,5 +11,10 @@ wheels/
 .pytest_cache/
 .ruff_cache/
 
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
 # Node.js
 node_modules/

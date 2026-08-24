@@ -117,47 +117,47 @@ $openspec-explore [テーマ]
 
 #### 4.2.2. 作業ディレクトリ生成
 ```text
-$openspec-new [変更名]
+$openspec-new-change [変更名]
 ```
-`openspec/changes/変更名/` というディレクトリが生成されます。
+`openspec/config.yaml` の `schema: my-workflow` を既定スキーマとして、`openspec/changes/変更名/` が生成されます。各 change の `.openspec.yaml` に使用スキーマが記録されるため、以後の成果物生成・実装・検証でも同じワークフローが使用されます。
 
 
-#### 4.2.3. 要件概要書を格納
-生成した `openspec/changes/変更名/` 内に要件概要書(`input.md`)を格納してください。<br />
-`input.md` には要件定義書、設計書、実装に必要な情報を記載します。
+#### 4.2.3. 補足資料を用意（任意）
+要件定義書、既存設計、調査結果などの補足資料がある場合は、`openspec/changes/変更名/input.md` に格納できます。<br />
+`input.md` は OpenSpec が自動で読み込むファイルではないため、次の工程で「`input.md` を参照する」と明示して使用してください。
 
 
 #### 4.2.4. ドキュメント生成
 ```text
-$openspec-ff [変更名] [input.mdを参照]
+$openspec-ff-change [変更名] [input.md を参照]
 ```
-`input.md` を元に実装に必要なドキュメントを生成します。
+変更内容と、明示的に参照を依頼した `input.md` を基に、実装に必要なドキュメントを生成します。
 
 
 #### 4.2.5. ドキュメント改善
 ```text
-$openspec-update [変更名] [修正内容]
+$openspec-update-change [変更名] [修正内容]
 ```
 生成したドキュメントを壁打ちしながら品質を向上させます。
 
 
 #### 4.2.6. 実装
 ```text
-$openspec-apply [変更名]
+$openspec-apply-change [変更名]
 ```
 生成したドキュメントから実装を行います。
 
 
 #### 4.2.7. 検証
 ```text
-$openspec-verify [変更名]
+$openspec-verify-change [変更名]
 ```
 実装内容が問題ないか検証します。
 
 
 #### 4.2.8. 仕様反映
 ```text
-$openspec-archive [変更名]
+$openspec-archive-change [変更名]
 ```
 変更内容を正式仕様として反映します。
 
