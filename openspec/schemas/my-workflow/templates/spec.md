@@ -1,11 +1,54 @@
 ## Purpose
-<!-- New capabilities only: one or two sentences (50+ characters) on what this capability is for. Delete this section for an existing capability. -->
+
+<!-- 新規 capability のみ記述する。既存 capability の差分仕様ではこの節を削除する。誰が、どの場面で、何を達成できるようにする能力かを 1～2 文（50文字以上）で記述する。 -->
 
 ## ADDED Requirements
 
-### Requirement: <!-- requirement name -->
-<!-- requirement text -->
+<!--
+新しい要件を記述する。既存要件の変更は `## MODIFIED Requirements`、廃止は `## REMOVED Requirements`、名称だけの変更は `## RENAMED Requirements` を使う。
 
-#### Scenario: <!-- scenario name -->
-- **WHEN** <!-- condition -->
-- **THEN** <!-- expected outcome -->
+要件本文は EARS（Easy Approach to Requirements Syntax）で書く。1つの Requirement は1つの検証可能な規範的振る舞いだけを表す。曖昧な語（適切に、可能な限り、通常は等）や実装のクラス・関数・DB・ライブラリは書かない。用語、入力、出力、境界値、失敗時の結果を必要に応じて定義する。
+
+- 常時: `システムは、<結果>しなければならない。`
+- イベント駆動: `システムは、<トリガー>時に、<結果>しなければならない。`
+- 状態駆動: `システムは、<状態>の間、<結果>しなければならない。`
+- 条件付き: `システムは、<条件>の場合、<結果>しなければならない。`
+- 例外・禁止: `システムは、<条件>の場合、<結果>してはならない。`
+- 複合: `システムは、<状態>の間、<トリガー>時に、<結果>しなければならない。`
+-->
+
+### Requirement: <利用者価値が分かる要件名>
+
+システムは、<EARS パターンに従う、単一で検証可能な要求>しなければならない。
+
+<!-- 必要な場合だけ、用語・入力値・出力値・期限・優先順位・エラー種別を列挙し、シナリオでも検証可能にする。 -->
+
+#### Scenario: <条件と期待結果が分かる正常系または異常系の名称>
+
+- **GIVEN** <開始時の状態・前提データ・利用者権限>
+- **WHEN** <利用者または外部システムの単一の操作・イベント>
+- **THEN** <観測可能で判定可能な結果>
+- **AND** <必要な追加結果（通知、保存状態、エラー、監査など）>
+
+<!-- 各 Requirement に最低1つ、分岐・境界・失敗が重要ならそれぞれ Scenario を追加する。Scenario 見出しは必ず `####`（ハッシュ4個）。GIVEN は不要なら省略可、WHEN と THEN は必須。THEN は「成功する」でなく、画面・応答・永続状態・拒否理由を明記する。 -->
+
+## MODIFIED Requirements
+
+<!-- 既存 capability の振る舞いを変更する場合だけ使用する。既存仕様から `### Requirement:` から配下の全 Scenario までを完全にコピーして更新する。要件名は既存仕様と完全一致させる。差分だけの抜粋は禁止。 -->
+
+## REMOVED Requirements
+
+<!-- 廃止する要件ごとに、削除対象の要件名、廃止理由、利用者・連携先の移行方法を必ず記述する。 -->
+
+### Requirement: <廃止する既存要件名>
+
+**Reason**: <廃止理由>
+
+**Migration**: <移行手順。不要な場合は「不要」と理由>
+
+## RENAMED Requirements
+
+<!-- 要件名だけを変更し、振る舞いを変えない場合だけ使用する。 -->
+
+- FROM: `<変更前の要件名>`
+- TO: `<変更後の要件名>`

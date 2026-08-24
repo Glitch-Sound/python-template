@@ -1,29 +1,48 @@
 ## Why
 
-<!-- Explain the motivation for this change. What problem does this solve? Why now? -->
+<!-- 変更の必要性を 1～3 段落で記述する。現状（誰が、いつ、何に困るか）、放置時の影響、変更後に達成する状態を、観測可能な事実とともに書く。解決手段や実装詳細は design.md に書く。 -->
 
 ## What Changes
 
-<!-- Describe what will change. Be specific about new capabilities, modifications, or removals. -->
+<!-- 利用者または外部システムから観測できる差分を箇条書きで書く。1項目は1つの振る舞いとし、追加・変更・廃止を明記する。互換性を壊す変更には **BREAKING**、対象、移行方法の要否を付ける。 -->
+
+- <追加・変更・廃止される振る舞い>
+
+## Scope
+
+<!-- 今回の合意範囲を明確にする。design.md の技術的な非目標と矛盾させない。 -->
+
+### In Scope
+
+- <今回提供する振る舞い・対象>
+
+### Out of Scope
+
+- <今回提供しない振る舞い・対象と理由>
+
+## Acceptance Criteria
+
+<!-- 完了を判定できる、利用者・運用者が検証可能な結果を書く。数値、状態、出力、エラーなどで判定し、実装方法は書かない。詳細な規範要件は spec.md に記載する。 -->
+
+- <受け入れ条件>
 
 ## Capabilities
 
+<!-- proposal と spec の契約。既存仕様を調査して記入する。パスは `openspec/specs/` からの相対パス、新規パス要素は kebab-case。各項目には対応する `specs/<capability-path>/spec.md` が必要。仕様レベルの振る舞いを変えない変更は `.openspec.yaml` の `skip_specs: true` を使い、要件を捏造しない。 -->
+
 ### New Capabilities
-<!-- Capabilities being introduced. Use kebab-case for path segments you introduce
-     (e.g., user-auth or identity/user-auth) that follow the project's existing
-     spec organization. Each creates specs/<capability-path>/spec.md. -->
-- `<capability-path>`: <brief description of what this capability covers>
+
+- `<capability-path>`: <新しい能力が誰に何を提供するか>
 
 ### Modified Capabilities
-<!-- Existing capabilities whose REQUIREMENTS are changing (not just implementation).
-     Only list here if spec-level behavior changes. Each needs a delta spec file.
-     Use the exact existing path under openspec/specs/. Leave empty if no requirement
-     changes. A change with no capabilities at all (pure refactor, tooling, docs)
-     must set `skip_specs: true` in its .openspec.yaml - openspec validate rejects
-     a zero-delta change without that marker. Do not invent a requirement just to
-     satisfy validation. -->
-- `<existing-capability-path>`: <what requirement is changing>
+
+- `<existing-capability-path>`: <変更される既存の規範的振る舞い>
 
 ## Impact
 
-<!-- Affected code, APIs, dependencies, systems -->
+<!-- 影響を受ける境界を列挙する。未確定なら「調査が必要」とし推測で断定しない。コード変更の詳細は design.md、実施順序は tasks.md に書く。 -->
+
+- **利用者・業務**: <画面、操作、権限、運用手順など>
+- **API・外部連携**: <契約、互換性、通知、依存先など>
+- **データ**: <保存データ、移行、保持・削除方針など>
+- **品質・運用**: <性能、監視、セキュリティ、リリースへの影響など>
