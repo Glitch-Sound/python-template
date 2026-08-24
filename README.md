@@ -179,7 +179,7 @@ uv init python-template \
 アプリケーションの実行時に使用するパッケージです。
 
 ```bash
-uv add typer loguru pydantic-settings
+uv add typer loguru pydantic-settings rich
 ```
 
 | パッケージ | 説明 |
@@ -187,6 +187,7 @@ uv add typer loguru pydantic-settings
 | `typer` | 型ヒントを利用して `CLI` アプリケーションを構築するためのライブラリです。<br />コマンド、引数、オプション、ヘルプなどを簡潔に定義できます。 |
 | `loguru` | `Python` 標準の `logging` よりシンプルな `API` でログ出力を扱うためのライブラリです。<br />ログレベル、ファイル出力、ローテーションなどを簡単に設定できます。 |
 | `pydantic-settings` | 環境変数や `.env` などからアプリケーション設定を読み込み、`Pydantic` による型検証を行うためのライブラリです。 |
+| `rich` | ターミナル出力を見やすく装飾するためのライブラリです。<br />色付きテキスト、テーブル、進捗表示、例外トレースバックなどを表示できます。 |
 
 
 ### 5.3. 開発用の依存関係

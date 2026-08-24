@@ -726,6 +726,7 @@ source = { editable = "." }
 dependencies = [
     { name = "loguru" },
     { name = "pydantic-settings" },
+    { name = "rich" },
     { name = "typer" },
 ]
 
@@ -743,6 +744,7 @@ dev = [
 requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pydantic-settings", specifier = ">=2.15.0" },
+    { name = "rich", specifier = ">=15.0.0" },
     { name = "typer", specifier = ">=0.27.1" },
 ]
 
