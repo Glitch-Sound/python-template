@@ -133,6 +133,28 @@ $openspec-ff-change [変更名] [input.md を参照]
 ```
 変更内容と、明示的に参照を依頼した `input.md` を基に、実装に必要なドキュメントを生成します。
 
+生成される成果物では、次の対応関係を管理します。
+
+| 成果物 | 記載する内容 |
+| --- | --- |
+| `spec.md` | 機能要件は `REQ-001`、非機能要件は `NREQ-001`、各要件のScenario、および試験方針 (`Test Policy`) |
+| `design.md` | Scenarioごとの試験ケースID (`TC-001`)、pytest実装先、試験内容、網羅性 (`Coverage Confirmation`) |
+| `tasks.md` | 要件ID・Scenario ID・TC-IDに対応する実装とpytestテスト作成・実行タスク |
+
+実装変更を伴うScenarioには、自動テストコードを作成します。文書のみの変更など、テストコードが不要な場合は、`design.md` の `Test Exceptions` に理由、承認者、期限を記録します。
+
+成果物の対応は、任意の時点で次のコマンドにより確認できます。これはpre-commitには含まれないため、設計レビュー前、実装前、アーカイブ前など必要なタイミングで実行してください。
+
+```bash
+# 指定した変更を確認
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
+
+# 進行中の全変更を確認
+uv run --locked python scripts/check_openspec_traceability.py --all
+```
+
+検査対象は、全REQ/NREQのScenario、全ScenarioのTC-IDとpytest実装先、全TC-IDのpytestテスト作成・実行タスクです。
+
 
 #### 4.2.5. ドキュメント改善
 ```text
@@ -266,6 +288,8 @@ python-template/
 ├── .claude/              # Claude Code
 ├── .github/              # GitHub Copilot
 ├── openspec/             # OpenSpec specifications
+│
+├── scripts/              # リポジトリ運用・OpenSpec検査スクリプト
 │
 ├── src/
 │   └── python_template/

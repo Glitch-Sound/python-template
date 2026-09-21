@@ -96,3 +96,13 @@ uv run --locked pre-commit run --all-files
 ```
 
 依存関係を変更した場合は、加えて `uv sync --locked`（Python）または `npm ci`（Node.js）で再現可能に同期できることを確認する。OpenSpec の変更はアーカイブ前に `openspec validate <change-name> --strict` を実行する。
+
+### 任意のトレーサビリティ確認
+
+変更の任意の時点で、次のコマンドにより要件・試験設計・テストタスクの対応を確認できる。
+
+```bash
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
+```
+
+進行中の全変更を確認する場合は、`--all` を使用する。

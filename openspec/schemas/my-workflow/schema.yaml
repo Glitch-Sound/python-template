@@ -22,8 +22,10 @@ artifacts:
       外部システムから観測できる振る舞いの契約とする。各 Requirement は EARS 記法で、単一かつ検証可能な
       「条件・トリガー・結果」を規定し、実装のクラス、関数、ライブラリ、処理手順を含めない。各 Requirement には
       必ず #### Scenario: 見出しのシナリオを1つ以上含め、WHEN と THEN を記述する。新規 capability には
-      50文字以上の Purpose を記述する。既存要件を変更する場合は Requirement ブロック全体を MODIFIED Requirements
-      に複写して更新し、廃止には Reason と Migration を含める。
+      50文字以上の Purpose を記述する。機能要件には `REQ-001`、非機能要件には `NREQ-001` 形式の一意で不変なIDを付け、
+      Scenario には `<要件ID>-S01` 形式のIDを付ける。spec.md には要件区分ごとの試験層、試験パターン、自動化必須条件を定める
+      Test Policy を記載する。既存要件を変更する場合は Requirement ブロック全体を MODIFIED Requirements に複写して更新し、
+      廃止には Reason と Migration を含める。
     requires:
       - proposal
   - id: design
@@ -35,7 +37,9 @@ artifacts:
       設計節、実装対象、検証方法へ対応付ける。Architecture and Responsibilities、Processing Flow、State and Data Design、
       Interfaces and Error Handling により、責務の配置、処理順、データ・境界契約、成功・失敗時の結果を実装者が
       判断せずに実装できる粒度で確定する。重要な技術選定には採用内容、根拠、代替案、不変条件を記述する。
-      該当する場合はセキュリティ、性能、運用、移行、ロールバック、テスト戦略を具体化する。仕様、採用方式、
+      Test Design では全ScenarioをTC-ID付き試験ケースに対応付け、前提、操作、期待値、テスト層、pytest 実装を記載する。
+      Coverage Confirmation で全Scenarioの対応状況を確認し、実装変更を伴うScenarioに手動試験のみを許可しない。該当する場合は
+      セキュリティ、性能、運用、移行、ロールバックを具体化する。仕様、採用方式、
       タスク分解を変更し得る未解決事項を残してはならない。
     requires:
       - specs
@@ -46,7 +50,7 @@ artifacts:
     instruction: >
       proposal.md、specs、design.md を根拠に tasks.md を日本語で作成する。各タスクは `- [ ] X.Y` のチェックボックス形式にし、
       変更対象、具体的な実施内容、対応する要件または設計節、検証可能な完了条件を含める。依存関係順に並べ、
-      テスト、品質チェック、移行・運用作業を必要に応じて含める。「実装する」「テストを追加する」だけの曖昧なタスクを
+      全要件とTC-IDに対応する自動テスト実装タスク、品質チェック、移行・運用作業を含める。「実装する」「テストを追加する」だけの曖昧なタスクを
       作らない。実施・検証済みの場合のみチェックボックスを完了にする。
     requires:
       - specs
