@@ -37,4 +37,5 @@ operations:
   archive:
     guidance:
       - アーカイブ前に `openspec validate <change-name> --strict` を実行する。
+      - アーカイブ前に `uv run --locked python scripts/check_openspec_traceability.py --change <change-name>` を実行する。
       - 未完了タスク、未検証の受け入れ条件、未解決の重要事項を残さない。

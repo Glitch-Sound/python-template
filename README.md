@@ -22,6 +22,12 @@ uv sync --locked
 npm ci
 ```
 
+OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/`、`.claude/`、`.github/` の各 instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
+
+```bash
+npx openspec update
+```
+
 アプリケーションを実行します。
 
 ```bash
@@ -29,6 +35,20 @@ uv run python-template
 ```
 
 ## 3. 開発
+
+コミット前には高速な基礎検査を実行します。初回だけフックを有効化してください。
+
+```bash
+uv run --locked pre-commit install
+uv run --locked pre-commit run --all-files
+```
+
+PR を出す前、または雛形の広範な変更後は、CI と同じ品質検査を実行します。
+
+```bash
+npm run check
+```
+
 テストを実行します。
 
 ```bash
@@ -53,23 +73,21 @@ uv run --locked ruff format .
 uv run --locked pyright
 ```
 
-`pre-commit` フックを有効化し、すべてのチェックを実行します。
-
-```bash
-uv run --locked pre-commit install
-uv run --locked pre-commit run --all-files
-```
-
 コミット時には以下のチェックを実行します。
 
 | チェック | 内容 |
 | --- | --- |
-| `Ruff lint` | `Python` コードを静的解析します。<br />バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認し、自動修正可能なものは修正します。 |
+| `Ruff lint` | `Python` コードを静的解析します。<br />バグ、インポート順、モダンな構文、簡略化、静的に検出できるセキュリティ上の問題を確認します。 |
 | `Ruff format` | `Python` コードが `Ruff` のフォーマットに従っているか確認します。 |
-| `Pyright` | 型の不整合を検査します。 |
-| `pytest` | テストを実行します。<br />テストの失敗や収集エラーがある場合は、コミットを中断します。 |
-| `Safety` | 依存パッケージを `Safety` の脆弱性データベースと照合します。 |
 | `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
+
+コミットを速く保つため、型検査、全テスト、OpenSpec のトレーサビリティ、依存関係の脆弱性検査は CI で実行します。CI は pull request、`main` への push、毎週月曜の定期実行、および手動実行で動きます。`npm run check` は CI と同じ format・lint・型検査・テスト・リポジトリ検査・全進行中 change のトレーサビリティ検査を実行します。
+
+`Safety` の現行 `scan` コマンドは非対話 CI では API キーを必要とするため、雛形では互換性のある `safety check` を CI に限定して使用しています。Safety の CI 用認証を導入する案件では `scan` に置き換えてください。
+
+### 3.1. AI コーディングエージェントの指示
+
+共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex、Claude Code、GitHub Copilot から参照します。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
 
 
 ## 4. SDD
@@ -143,7 +161,7 @@ $openspec-ff-change [変更名] [input.md を参照]
 
 実装変更を伴うScenarioには、自動テストコードを作成します。文書のみの変更など、テストコードが不要な場合は、`design.md` の `Test Exceptions` に理由、承認者、期限を記録します。
 
-成果物の対応は、任意の時点で次のコマンドにより確認できます。これはpre-commitには含まれないため、設計レビュー前、実装前、アーカイブ前など必要なタイミングで実行してください。
+成果物の対応は、任意の時点で次のコマンドにより確認できます。これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、PR の CI で実行してください。
 
 ```bash
 # 指定した変更を確認
@@ -182,6 +200,13 @@ $openspec-verify-change [変更名]
 $openspec-archive-change [変更名]
 ```
 変更内容を正式仕様として反映します。
+
+アーカイブ前には、OpenSpec の厳密検証とトレーサビリティ検査の両方を通します。
+
+```bash
+npx openspec validate <change-name> --strict
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
+```
 
 
 ## 5. 事前設定
