@@ -18,8 +18,8 @@
 - テストは `tests/` に置き、正常系、異常系、境界値など仕様で定義した分岐を検証する。
 - `spec.md` に試験方針、`design.md` に試験ケース・テスト実装先・網羅性、`tasks.md` にテスト作成と実行のタスクを記載する。
 - 実装後は、プロジェクトで定義されたlint、format、型検査、テストを実行する。
-- コミット前は `pre-commit` による高速な基礎検査を行い、PR と `main` では CI の `npm run check` を品質ゲートとする。
-- 依存関係の脆弱性検査はネットワークを必要とするため CI で実施する。現在の Safety 3 系では非対話 CI 向けの `scan` に認証情報が必要なため、認証を導入するまでは互換性のある `safety check` を使用する。
+- コミット前は `pre-commit` による高速な基礎検査を行い、統合前には `npm run check` を品質ゲートとする。
+- 依存関係の脆弱性検査は、案件で承認されたツールと実行環境を選定して追加する。
 - changeの任意の時点で、次のコマンドにより要件・試験設計・テストタスクの対応を確認できる。
 
 ```bash
@@ -28,4 +28,4 @@ uv run --locked python scripts/check_openspec_traceability.py --change <change-n
 
 進行中の全changeを確認する場合は、`--all` を使用する。
 
-この検査はコミットごとには実行せず、PR の CI と change の verify / archive 前に実行する。
+この検査はコミットごとには実行せず、統合前と change の verify / archive 前に実行する。

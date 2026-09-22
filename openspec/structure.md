@@ -14,7 +14,6 @@ project/
 ├── pyproject.toml       # Pythonとツールの設定
 ├── AGENTS.md            # AI 開発エージェントの共通指示
 ├── CLAUDE.md            # Claude Code 用の共通指示入口
-├── .github/             # Copilot 指示と CI ワークフロー
 └── README.md            # 利用方法
 ```
 

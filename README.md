@@ -10,7 +10,6 @@
 
 ### 1.1. 対応 AI コーディングエージェント
 - `OpenAI Codex`
-- `GitHub Copilot`
 - `Claude Code`
 
 
@@ -22,7 +21,9 @@ uv sync --locked
 npm ci
 ```
 
-OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/`、`.claude/`、`.github/` の各 instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
+初回の依存関係取得には、社内で承認された Python / npm パッケージレジストリまたは社内ミラーを使用してください。取得後の `npm run check`、`pre-commit`、OpenSpec の検証は外部サービスへ接続しません。
+
+OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
 
 ```bash
 npx openspec update
@@ -43,7 +44,7 @@ uv run --locked pre-commit install
 uv run --locked pre-commit run --all-files
 ```
 
-PR を出す前、または雛形の広範な変更後は、CI と同じ品質検査を実行します。
+統合前、または雛形の広範な変更後は、完全な品質検査を実行します。
 
 ```bash
 npm run check
@@ -81,13 +82,11 @@ uv run --locked pyright
 | `Ruff format` | `Python` コードが `Ruff` のフォーマットに従っているか確認します。 |
 | `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
 
-コミットを速く保つため、型検査、全テスト、OpenSpec のトレーサビリティ、依存関係の脆弱性検査は CI で実行します。CI は pull request、`main` への push、毎週月曜の定期実行、および手動実行で動きます。`npm run check` は CI と同じ format・lint・型検査・テスト・リポジトリ検査・全進行中 change のトレーサビリティ検査を実行します。
-
-`Safety` の現行 `scan` コマンドは非対話 CI では API キーを必要とするため、雛形では互換性のある `safety check` を CI に限定して使用しています。Safety の CI 用認証を導入する案件では `scan` に置き換えてください。
+コミットを速く保つため、型検査、全テスト、OpenSpec のトレーサビリティは `npm run check` にまとめています。このコマンドは外部サービスに接続せず、社内 CI、手動レビュー、任意の Git ホスティング基盤から同じように実行できます。依存関係の脆弱性検査は、案件で承認されたツールと実行環境を選定して追加してください。
 
 ### 3.1. AI コーディングエージェントの指示
 
-共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex、Claude Code、GitHub Copilot から参照します。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
+共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex と Claude Code から参照します。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
 
 
 ## 4. SDD
@@ -161,7 +160,7 @@ $openspec-ff-change [変更名] [input.md を参照]
 
 実装変更を伴うScenarioには、自動テストコードを作成します。文書のみの変更など、テストコードが不要な場合は、`design.md` の `Test Exceptions` に理由、承認者、期限を記録します。
 
-成果物の対応は、任意の時点で次のコマンドにより確認できます。これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、PR の CI で実行してください。
+成果物の対応は、任意の時点で次のコマンドにより確認できます。これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、統合前に実行してください。
 
 ```bash
 # 指定した変更を確認
@@ -241,7 +240,7 @@ uv add typer loguru pydantic-settings rich
 開発、テスト、静的解析で使用するパッケージです。
 
 ```bash
-uv add --dev pre-commit pyright pytest pytest-mock ruff safety
+uv add --dev pre-commit pyright pytest pytest-mock ruff
 ```
 
 | パッケージ | 説明 |
@@ -249,7 +248,6 @@ uv add --dev pre-commit pyright pytest pytest-mock ruff safety
 | `pytest` | `Python` のテストフレームワークです。<br />シンプルな `assert` を使って単体テストや結合テストを記述できます。 |
 | `pytest-mock` | `pytest` からモックを扱いやすくするプラグインです。<br />`mocker` フィクスチャを利用して、関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
 | `ruff` | 高速な `Python` リンター／フォーマッターです。<br />コード品質のチェックとコードフォーマットを担当します。 |
-| `safety` | 依存パッケージを既知の脆弱性データベースと照合します。 |
 | `pyright` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
 
 
@@ -284,10 +282,10 @@ Pyright
 npm install --save-dev @fission-ai/openspec@latest
 ```
 
-`Codex`、`GitHub Copilot`、`Claude Code` 向けに `OpenSpec` を初期化しています。
+`Codex`、`Claude Code` 向けに `OpenSpec` を初期化しています。
 
 ```bash
-npx openspec init --tools codex,github-copilot,claude
+npx openspec init --tools codex,claude
 ```
 
 `OpenSpec` の拡張機能を有効にします。
@@ -311,7 +309,6 @@ Y
 python-template/
 ├── .agents/              # AI エージェント用スキル
 ├── .claude/              # Claude Code
-├── .github/              # GitHub Copilot
 ├── openspec/             # OpenSpec specifications
 │
 ├── scripts/              # リポジトリ運用・OpenSpec検査スクリプト
