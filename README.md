@@ -292,7 +292,7 @@ python-template/
 ├── scripts/              # リポジトリ運用・OpenSpec検査スクリプト
 │
 ├── src/
-│   └── python_template/
+│   └── app/
 │
 ├── tests/
 │

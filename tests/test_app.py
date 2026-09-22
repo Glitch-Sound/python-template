@@ -1,9 +1,9 @@
 from pytest import CaptureFixture
 
-from python_template import main
+from app import main
 
 
 def test_main_prints_greeting(capsys: CaptureFixture[str]) -> None:
     main()
 
-    assert capsys.readouterr().out == "Hello from python-template!\n"
+    assert capsys.readouterr().out == "Hello from app!\n"
