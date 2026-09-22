@@ -26,7 +26,7 @@ npm ci
 OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
 
 ```bash
-npx openspec update
+npx --no-install openspec update
 ```
 
 アプリケーションを実行します。
@@ -203,7 +203,7 @@ $openspec-archive-change [変更名]
 アーカイブ前には、OpenSpec の厳密検証とトレーサビリティ検査の両方を通します。
 
 ```bash
-npx openspec validate <change-name> --strict
+npx --no-install openspec validate <change-name> --strict
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
 ```
 
@@ -286,22 +286,22 @@ npm install --save-dev @fission-ai/openspec@latest
 `Codex`、`Claude Code` 向けに `OpenSpec` を初期化しています。
 
 ```bash
-npx openspec init --tools codex,claude
+npx --no-install openspec init --tools codex,claude
 ```
 
 `OpenSpec` の拡張機能を有効にします。
 
 ```bash
-npx openspec config profile
+npx --no-install openspec config profile
 
 > workflows only
 
-? Select workdlows to make available:
+? Select workflows to make available:
 [x] New change
-[x] Fast-forword
+[x] Fast-forward
 [x] Verify change
 
-? Apply chamges to this project now?
+? Apply changes to this project now?
 Y
 ```
 
@@ -310,6 +310,8 @@ Y
 python-template/
 ├── .agents/              # AI エージェント用スキル
 ├── .claude/              # Claude Code
+├── .gitignore             # Git の除外設定
+├── .pre-commit-config.yaml # コミット時の基礎検査
 ├── openspec/             # OpenSpec specifications
 │
 ├── scripts/              # リポジトリ運用・OpenSpec検査スクリプト
@@ -319,6 +321,8 @@ python-template/
 │
 ├── tests/
 │
+├── AGENTS.md              # AI 開発エージェントの共通指示
+├── CLAUDE.md              # Claude Code 用の共通指示入口
 ├── pyproject.toml        # Python プロジェクト設定
 ├── uv.lock               # Python の依存関係ロックファイル
 ├── .python-version       # Python バージョン
@@ -343,10 +347,17 @@ uv add <package>
 uv add --dev <package>
 ```
 
-依存関係を同期します。
+ロックファイルに従って依存関係を同期します。
 
 ```bash
-uv sync
+uv sync --locked
+```
+
+依存関係を追加・更新した後は、ロックファイルを更新してから同期します。
+
+```bash
+uv lock
+uv sync --locked
 ```
 
 `OpenSpec` を含む `Node.js` の依存関係を同期します。

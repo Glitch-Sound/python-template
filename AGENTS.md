@@ -11,5 +11,5 @@
 ## 完了条件
 
 - 直接変更では、影響に応じて `pre-commit run --all-files` または `npm run check` を実行する。
-- OpenSpec change では、実装前に成果物を確認し、verify / archive 前に `uv run --locked python scripts/check_openspec_traceability.py --change <change-name>` と `npx openspec validate <change-name> --strict` を実行する。
+- OpenSpec change では、実装前に成果物を確認し、verify / archive 前に `uv run --locked python scripts/check_openspec_traceability.py --change <change-name>` と `npx --no-install openspec validate <change-name> --strict` を実行する。
 - 秘密情報をコード、仕様、ログ、テストデータに含めない。
