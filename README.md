@@ -240,13 +240,14 @@ uv add typer loguru pydantic-settings rich
 開発、テスト、静的解析で使用するパッケージです。
 
 ```bash
-uv add --dev pre-commit pyright pytest pytest-mock ruff
+uv add --dev pre-commit pyright pyyaml pytest pytest-mock ruff
 ```
 
 | パッケージ | 説明 |
 | --- | --- |
 | `pytest` | `Python` のテストフレームワークです。<br />シンプルな `assert` を使って単体テストや結合テストを記述できます。 |
 | `pytest-mock` | `pytest` からモックを扱いやすくするプラグインです。<br />`mocker` フィクスチャを利用して、関数やオブジェクトの差し替え、呼び出し検証などを行えます。 |
+| `PyYAML` | リポジトリ検査スクリプトで `YAML` 設定ファイルを検証します。 |
 | `ruff` | 高速な `Python` リンター／フォーマッターです。<br />コード品質のチェックとコードフォーマットを担当します。 |
 | `pyright` | `Python` の静的型チェッカーです。<br />型ヒントを解析し、実行前に型の不整合を検出します。 |
 
