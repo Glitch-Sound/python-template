@@ -1,0 +1,22 @@
+{
+  "name": "Python Template",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "UV_LINK_MODE": "copy"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-python-template-venv,target=${containerWorkspaceFolder}/.venv,type=volume",
+    "source=${localWorkspaceFolderBasename}-python-template-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=${localWorkspaceFolderBasename}-uv-cache,target=/home/vscode/.cache/uv,type=volume",
+    "source=${localWorkspaceFolderBasename}-npm-cache,target=/home/vscode/.npm,type=volume"
+  ],
+  "postCreateCommand": "uv sync --locked && npm ci"
+}

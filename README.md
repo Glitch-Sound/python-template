@@ -23,6 +23,19 @@ npm ci
 
 初回の依存関係取得には、社内で承認された Python / npm パッケージレジストリまたは社内ミラーを使用してください。取得後の `npm run check`、`pre-commit`、OpenSpec の検証は外部サービスへ接続しません。
 
+### Dev Container（任意）
+
+Docker で開発したい場合は、Docker Engine と Dev Containers に対応したエディターを用意し、このリポジトリをコンテナで再度開いてください。VS Code では Dev Containers 拡張機能の **Reopen in Container** を使用します。
+
+コンテナには Python 3.13、`uv`、Node.js 22 が含まれ、作成時に `uv sync --locked` と `npm ci` が実行されます。`.venv`、`node_modules`、パッケージキャッシュは Docker ボリュームに分離されるため、ホストの依存関係やOS固有のバイナリとは混在しません。依存関係を変更した場合は、コンテナ内で通常どおり次を実行してください。
+
+```bash
+uv sync --locked
+npm ci
+```
+
+Docker を利用しない場合は、この節を使わず、従来どおりローカルで開発できます。
+
 OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
 
 ```bash
