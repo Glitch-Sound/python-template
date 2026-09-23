@@ -3,11 +3,6 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "22"
-    }
-  },
   "remoteUser": "vscode",
   "containerEnv": {
     "UV_LINK_MODE": "copy"
@@ -18,5 +13,5 @@
     "source=${localWorkspaceFolderBasename}-uv-cache,target=/home/vscode/.cache/uv,type=volume",
     "source=${localWorkspaceFolderBasename}-npm-cache,target=/home/vscode/.npm,type=volume"
   ],
-  "postCreateCommand": "uv sync --locked && npm ci"
+  "postCreateCommand": "sudo git config --system --add safe.directory \"$PWD\" && sudo chown -R vscode:vscode .venv node_modules /home/vscode/.cache/uv /home/vscode/.npm && uv sync --locked && npm ci"
 }
