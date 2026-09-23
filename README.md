@@ -36,9 +36,10 @@ npm ci
 
 Docker を利用しない場合は、この節を使わず、従来どおりローカルで開発できます。
 
-OpenSpec を更新して生成済みの agent 用 instructions を更新する場合は、更新内容をレビューしたうえで次を実行します。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。
+OpenSpec を更新する場合は、先にプロジェクトローカルの CLI とロックファイルを更新してから、生成済みの agent 用 instructions を更新します。CLI を更新せずに `openspec update` だけを実行しても、新しいワークフローは導入されません。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。生成差分をレビューしたうえで次を実行します。
 
 ```bash
+npm install --save-dev @fission-ai/openspec@latest
 npx --no-install openspec update
 ```
 
@@ -302,20 +303,11 @@ npm install --save-dev @fission-ai/openspec@latest
 npx --no-install openspec init --tools codex,claude
 ```
 
-`OpenSpec` の拡張機能を有効にします。
+標準 profile に含まれないワークフロー（`new`、`continue`、`ff`、`verify`、`bulk-archive`、`onboard` など）が必要な場合は、profile で選択してから生成済み instruction を更新します。選択肢は OpenSpec のバージョンにより変わるため、対話プロンプトの表示例を固定せず、コマンドの案内に従って選択してください。
 
 ```bash
 npx --no-install openspec config profile
-
-> workflows only
-
-? Select workflows to make available:
-[x] New change
-[x] Fast-forward
-[x] Verify change
-
-? Apply changes to this project now?
-Y
+npx --no-install openspec update
 ```
 
 ## 6. プロジェクト構成
