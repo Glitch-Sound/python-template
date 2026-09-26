@@ -11,6 +11,7 @@
 ### 1.1. 対応 AI コーディングエージェント
 - `OpenAI Codex`
 - `Claude Code`
+- `GitHub Copilot`
 
 
 ## 2. クイックスタート
@@ -100,7 +101,7 @@ uv run --locked pyright
 
 ### 3.1. AI コーディングエージェントの指示
 
-共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex と Claude Code から参照します。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
+共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex、Claude Code、GitHub Copilot から参照します。GitHub Copilot はリポジトリ共通の [`.github/copilot-instructions.md`](.github/copilot-instructions.md) も読み込みます。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
 
 
 ## 4. SDD
