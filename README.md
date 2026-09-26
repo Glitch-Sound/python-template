@@ -22,22 +22,26 @@ uv sync --locked
 npm ci
 ```
 
-初回の依存関係取得には、社内で承認された Python / npm パッケージレジストリまたは社内ミラーを使用してください。取得後の `npm run check`、`pre-commit`、OpenSpec の検証は外部サービスへ接続しません。
-
 ### Dev Container（任意）
 
-Docker で開発したい場合は、Docker Engine と Dev Containers に対応したエディターを用意し、このリポジトリをコンテナで再度開いてください。VS Code では Dev Containers 拡張機能の **Reopen in Container** を使用します。
+Docker で開発したい場合は、Docker Engine と Dev Containers に対応したエディターを用意し、このリポジトリをコンテナで再度開いてください。<br />
+VS Code では Dev Containers 拡張機能の **Reopen in Container** を使用します。
 
-コンテナには Python 3.13、`uv`、Node.js 22 が含まれ、作成時に `uv sync --locked` と `npm ci` が実行されます。`.venv`、`node_modules`、パッケージキャッシュは Docker ボリュームに分離されるため、ホストの依存関係やOS固有のバイナリとは混在しません。依存関係を変更した場合は、コンテナ内で通常どおり次を実行してください。
+コンテナには Python 3.13、`uv`、Node.js 22 が含まれ、作成時に `uv sync --locked` と `npm ci` が実行されます。<br />
+`.venv`、`node_modules`、パッケージキャッシュは Docker ボリュームに分離されるため、ホストの依存関係やOS固有のバイナリとは混在しません。<br />
+依存関係を変更した場合は、コンテナ内で通常どおり次を実行してください。<br />
 
 ```bash
 uv sync --locked
 npm ci
 ```
 
-Docker を利用しない場合は、この節を使わず、従来どおりローカルで開発できます。
+### OpenSpec 更新（任意）
 
-OpenSpec を更新する場合は、先にプロジェクトローカルの CLI とロックファイルを更新してから、生成済みの agent 用 instructions を更新します。CLI を更新せずに `openspec update` だけを実行しても、新しいワークフローは導入されません。`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。生成差分をレビューしたうえで次を実行します。
+OpenSpec を更新する場合は、先にプロジェクトローカルの CLI とロックファイルを更新してから、生成済みの agent 用 instructions を更新します。<br />
+CLI を更新せずに `openspec update` だけを実行しても、新しいワークフローは導入されません。<br />
+`.agents/` と `.claude/` の instruction は OpenSpec が対象エージェント向けに生成する成果物であり、手作業で片方だけを変更しません。<br />
+生成差分をレビューしたうえで次を実行します。
 
 ```bash
 npm install --save-dev @fission-ai/openspec@latest
@@ -52,7 +56,8 @@ uv run python-template
 
 ## 3. 開発
 
-コミット前には高速な基礎検査を実行します。初回だけフックを有効化してください。
+コミット前には高速な基礎検査を実行します。<br />
+初回だけフックを有効化してください。
 
 ```bash
 uv run --locked pre-commit install
@@ -97,11 +102,12 @@ uv run --locked pyright
 | `Ruff format` | `Python` コードが `Ruff` のフォーマットに従っているか確認します。 |
 | `Repository checks` | 1 MB を超えるファイル、マージ競合の痕跡、不正な `YAML`/`TOML`、秘密鍵、末尾改行・行末の空白を検出します。 |
 
-コミットを速く保つため、型検査、全テスト、OpenSpec のトレーサビリティは `npm run check` にまとめています。このコマンドは外部サービスに接続せず、社内 CI、手動レビュー、任意の Git ホスティング基盤から同じように実行できます。依存関係の脆弱性検査は、案件で承認されたツールと実行環境を選定して追加してください。
+コミットを速く保つため、型検査、全テスト、OpenSpec のトレーサビリティは `npm run check` にまとめています。
 
 ### 3.1. AI コーディングエージェントの指示
 
-共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex、Claude Code、GitHub Copilot から参照します。GitHub Copilot はリポジトリ共通の [`.github/copilot-instructions.md`](.github/copilot-instructions.md) も読み込みます。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
+共通の開発方針は [AGENTS.md](AGENTS.md) を正本とし、OpenAI Codex、Claude Code、GitHub Copilot から参照します。<br />
+GitHub Copilot はリポジトリ共通の [`.github/copilot-instructions.md`](.github/copilot-instructions.md) も読み込みます。雛形・文書・振る舞いを変えない保守は直接変更できます。一方、外部から観測できる振る舞い、API、データ、セキュリティ、性能、外部連携、移行・運用を変える作業は OpenSpec change を先に作成します。曖昧な場合は要件を作り出さず、利用者に確認してください。
 
 
 ## 4. SDD
@@ -141,17 +147,18 @@ python-template/
 
 
 #### 4.2.1. 調査・検討
+どのように進めていくか、チャットベースで相談してください。
 ```text
 $openspec-explore [テーマ]
 ```
-どのように進めていくか、チャットベースで相談してください。
 
 
 #### 4.2.2. 作業ディレクトリ生成
+`openspec/config.yaml` の `schema: my-workflow` を既定スキーマとして、`openspec/changes/変更名/` が生成されます。<br />
+各 change の `.openspec.yaml` に使用スキーマが記録されるため、以後の成果物生成・実装・検証でも同じワークフローが使用されます。
 ```text
 $openspec-new-change [変更名]
 ```
-`openspec/config.yaml` の `schema: my-workflow` を既定スキーマとして、`openspec/changes/変更名/` が生成されます。各 change の `.openspec.yaml` に使用スキーマが記録されるため、以後の成果物生成・実装・検証でも同じワークフローが使用されます。
 
 
 #### 4.2.3. 補足資料を用意（任意）
@@ -160,10 +167,10 @@ $openspec-new-change [変更名]
 
 
 #### 4.2.4. ドキュメント生成
+変更内容と、明示的に参照を依頼した `input.md` を基に、実装に必要なドキュメントを生成します。
 ```text
 $openspec-ff-change [変更名] [input.md を参照]
 ```
-変更内容と、明示的に参照を依頼した `input.md` を基に、実装に必要なドキュメントを生成します。
 
 生成される成果物では、次の対応関係を管理します。
 
@@ -173,9 +180,11 @@ $openspec-ff-change [変更名] [input.md を参照]
 | `design.md` | Scenarioごとの試験ケースID (`TC-001`)、pytest実装先、試験内容、網羅性 (`Coverage Confirmation`) |
 | `tasks.md` | 要件ID・Scenario ID・TC-IDに対応する実装とpytestテスト作成・実行タスク |
 
-実装変更を伴うScenarioには、自動テストコードを作成します。文書のみの変更など、テストコードが不要な場合は、`design.md` の `Test Exceptions` に理由、承認者、期限を記録します。
+実装変更を伴う `Scenario` には、自動テストコードを作成します。<br />
+文書のみの変更など、テストコードが不要な場合は、`design.md` の `Test Exceptions` に理由、承認者、期限を記録します。
 
-成果物の対応は、任意の時点で次のコマンドにより確認できます。これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、統合前に実行してください。
+成果物の対応は、任意の時点で次のコマンドにより確認できます。<br />
+これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、統合前に実行してください。
 
 ```bash
 # 指定した変更を確認
@@ -189,34 +198,33 @@ uv run --locked python scripts/check_openspec_traceability.py --all
 
 
 #### 4.2.5. ドキュメント改善
+生成したドキュメントを壁打ちしながら品質を向上させます。
 ```text
 $openspec-update-change [変更名] [修正内容]
 ```
-生成したドキュメントを壁打ちしながら品質を向上させます。
 
 
 #### 4.2.6. 実装
+生成したドキュメントから実装を行います。
 ```text
 $openspec-apply-change [変更名]
 ```
-生成したドキュメントから実装を行います。
 
 
 #### 4.2.7. 検証
+実装内容が問題ないか検証します。
 ```text
 $openspec-verify-change [変更名]
 ```
-実装内容が問題ないか検証します。
 
 
 #### 4.2.8. 仕様反映
+変更内容を正式仕様として反映します。
 ```text
 $openspec-archive-change [変更名]
 ```
-変更内容を正式仕様として反映します。
 
 アーカイブ前には、OpenSpec の厳密検証とトレーサビリティ検査の両方を通します。
-
 ```bash
 npx --no-install openspec validate <change-name> --strict
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
@@ -304,7 +312,8 @@ npm install --save-dev @fission-ai/openspec@latest
 npx --no-install openspec init --tools codex,claude
 ```
 
-標準 profile に含まれないワークフロー（`new`、`continue`、`ff`、`verify`、`bulk-archive`、`onboard` など）が必要な場合は、profile で選択してから生成済み instruction を更新します。選択肢は OpenSpec のバージョンにより変わるため、対話プロンプトの表示例を固定せず、コマンドの案内に従って選択してください。
+標準 profile に含まれないワークフロー（`new`、`continue`、`ff`、`verify`、`bulk-archive`、`onboard` など）が必要な場合は、profile で選択してから生成済み instruction を更新します。<br />
+選択肢は OpenSpec のバージョンにより変わるため、対話プロンプトの表示例を固定せず、コマンドの案内に従って選択してください。
 
 ```bash
 npx --no-install openspec config profile
