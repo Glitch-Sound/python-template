@@ -47,10 +47,10 @@ def write_change(root: Path, *, include_scenario: bool = True) -> None:
     )
 
 
-def run_check(root: Path) -> subprocess.CompletedProcess[str]:
+def run_check(root: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
     """Run the script from a temporary repository root."""
     return subprocess.run(  # noqa: S603 -- test controls the fixed interpreter and script path.
-        [sys.executable, str(SCRIPT_PATH.resolve()), "--change", "example"],
+        [sys.executable, str(SCRIPT_PATH.resolve()), *arguments],
         cwd=root,
         check=False,
         capture_output=True,
@@ -61,7 +61,14 @@ def run_check(root: Path) -> subprocess.CompletedProcess[str]:
 def test_check_passes_when_all_traceability_links_exist(tmp_path: Path) -> None:
     write_change(tmp_path)
 
-    result = run_check(tmp_path)
+    result = run_check(tmp_path, "--change", "example")
+
+    assert result.returncode == 0
+    assert "passed" in result.stdout
+
+
+def test_check_all_passes_when_changes_directory_does_not_exist(tmp_path: Path) -> None:
+    result = run_check(tmp_path, "--all")
 
     assert result.returncode == 0
     assert "passed" in result.stdout
@@ -70,7 +77,7 @@ def test_check_passes_when_all_traceability_links_exist(tmp_path: Path) -> None:
 def test_check_reports_requirement_without_scenario(tmp_path: Path) -> None:
     write_change(tmp_path, include_scenario=False)
 
-    result = run_check(tmp_path)
+    result = run_check(tmp_path, "--change", "example")
 
     assert result.returncode == 1
     assert "REQ-001 に Scenario がありません" in result.stderr
@@ -81,7 +88,7 @@ def test_check_reports_missing_test_task(tmp_path: Path) -> None:
     tasks_file = tmp_path / "openspec" / "changes" / "example" / "tasks.md"
     tasks_file.write_text("- [ ] 2.1 TC-001 を実装する。\n", encoding="utf-8")
 
-    result = run_check(tmp_path)
+    result = run_check(tmp_path, "--change", "example")
 
     assert result.returncode == 1
     assert (

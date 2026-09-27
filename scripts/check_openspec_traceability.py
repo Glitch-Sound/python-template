@@ -121,6 +121,8 @@ def main() -> int:
     changes_root = Path.cwd() / "openspec" / "changes"
     if arguments.change:
         change_dirs = [changes_root / arguments.change]
+    elif not changes_root.is_dir():
+        change_dirs = []
     else:
         change_dirs = [
             path
