@@ -70,15 +70,24 @@ def check_change(change_dir: Path) -> list[str]:
     tasks = tasks_file.read_text(encoding="utf-8")
     task_lines = tasks.splitlines()
     task_requirements: dict[str, set[str]] = {}
+    duplicate_task_ids: set[str] = set()
     for line in task_lines:
         task_match = TASK_LINE_PATTERN.match(line)
         if not task_match:
             continue
         task_id = task_match.group("task_id")
+        if task_id in task_requirements:
+            duplicate_task_ids.add(task_id)
+            continue
         task_requirements[task_id] = set(
             REQUIREMENT_ID_PATTERN.findall(task_match.group("description"))
         )
+    for task_id in sorted(duplicate_task_ids):
+        errors.append(
+            f"{change_dir.name}: tasks.md のタスク番号 {task_id} が重複しています"
+        )
 
+    traceability_requirements: set[str] = set()
     if "## Requirements Traceability" not in design:
         errors.append(
             f"{change_dir.name}: design.md に Requirements Traceability がありません"
@@ -92,6 +101,9 @@ def check_change(change_dir: Path) -> list[str]:
                 )
                 continue
             requirement_id = row[0]
+            traceability_requirements.add(requirement_id)
+            if requirement_id not in requirements:
+                continue
             referenced_tasks = TASK_REFERENCE_PATTERN.findall(row[3])
             if not referenced_tasks:
                 errors.append(
@@ -109,6 +121,16 @@ def check_change(change_dir: Path) -> list[str]:
                         f"{change_dir.name}: {requirement_id} が参照する実装タスク "
                         f"{task_id} はその要件を扱っていません"
                     )
+
+    for requirement_id in sorted(requirements - traceability_requirements):
+        errors.append(
+            f"{change_dir.name}: Requirements Traceability に {requirement_id} がありません"
+        )
+    for requirement_id in sorted(traceability_requirements - requirements):
+        errors.append(
+            f"{change_dir.name}: Requirements Traceability の {requirement_id} "
+            "は仕様に存在しません"
+        )
 
     if "## Test Design" not in design:
         return [*errors, f"{change_dir.name}: design.md に Test Design がありません"]
