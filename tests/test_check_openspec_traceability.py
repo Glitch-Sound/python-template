@@ -33,7 +33,13 @@ def write_change(root: Path, *, include_scenario: bool = True) -> None:
         encoding="utf-8",
     )
     (change / "design.md").write_text(
-        """## Test Design
+        """## Requirements Traceability
+
+| 要件ID | 対応する設計節 | 責務・境界 | 実装タスク | 試験ケース | 検証方法 |
+| --- | --- | --- | --- | --- | --- |
+| REQ-001 | Workflow | 結果生成 | 2.1 | TC-001 | unit test |
+
+## Test Design
 
 | TC ID | 要件ID | Scenario ID | テスト層 | 前提・操作 | 期待値 | pytest 実装 | 自動化 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -42,7 +48,9 @@ def write_change(root: Path, *, include_scenario: bool = True) -> None:
         encoding="utf-8",
     )
     (change / "tasks.md").write_text(
-        "- [ ] 3.1 `tests/test_example.py` に TC-001 の pytest テストを追加する。\n",
+        "- [ ] 2.1 結果生成を実装する。対応: REQ-001。\n"
+        "- [ ] 3.1 `tests/test_example.py` に TC-001 の pytest テストを追加する。"
+        " 対応: REQ-001 / REQ-001-S01。\n",
         encoding="utf-8",
     )
 
@@ -86,11 +94,52 @@ def test_check_reports_requirement_without_scenario(tmp_path: Path) -> None:
 def test_check_reports_missing_test_task(tmp_path: Path) -> None:
     write_change(tmp_path)
     tasks_file = tmp_path / "openspec" / "changes" / "example" / "tasks.md"
-    tasks_file.write_text("- [ ] 2.1 TC-001 を実装する。\n", encoding="utf-8")
+    tasks_file.write_text(
+        "- [ ] 2.1 結果生成を実装する。対応: REQ-001。\n",
+        encoding="utf-8",
+    )
 
     result = run_check(tmp_path, "--change", "example")
 
     assert result.returncode == 1
     assert (
         "TC-001 に対応する pytest テスト作成・実行タスクがありません" in result.stderr
+    )
+
+
+def test_check_reports_missing_task_referenced_by_design(tmp_path: Path) -> None:
+    write_change(tmp_path)
+    design_file = tmp_path / "openspec" / "changes" / "example" / "design.md"
+    design_file.write_text(
+        design_file.read_text(encoding="utf-8").replace(
+            "| REQ-001 | Workflow | 結果生成 | 2.1 |",
+            "| REQ-001 | Workflow | 結果生成 | 9.9 |",
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_check(tmp_path, "--change", "example")
+
+    assert result.returncode == 1
+    assert (
+        "REQ-001 が参照する実装タスク 9.9 は tasks.md に存在しません" in result.stderr
+    )
+
+
+def test_check_reports_task_for_different_requirement(tmp_path: Path) -> None:
+    write_change(tmp_path)
+    tasks_file = tmp_path / "openspec" / "changes" / "example" / "tasks.md"
+    tasks_file.write_text(
+        tasks_file.read_text(encoding="utf-8").replace(
+            "2.1 結果生成を実装する。対応: REQ-001。",
+            "2.1 位置合わせを実装する。対応: REQ-002。",
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_check(tmp_path, "--change", "example")
+
+    assert result.returncode == 1
+    assert (
+        "REQ-001 が参照する実装タスク 2.1 はその要件を扱っていません" in result.stderr
     )
