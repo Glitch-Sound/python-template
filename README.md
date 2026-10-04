@@ -54,6 +54,43 @@ npx --no-install openspec update
 uv run python-template
 ```
 
+### 派生プロジェクトを作成した後
+
+テンプレートから作成しただけでは、配布名や CLI は `python-template` のままです。開発開始時に次の項目を見直してください。
+
+| 対象 | 見直す内容 |
+| --- | --- |
+| `pyproject.toml` の `[project]` | `name`、`description`、`authors`、開始時の `version` をプロジェクトに合わせる |
+| `[project.scripts]` | CLI の名前と呼び出し先を定め、不要な `python-template = "app:main"` を削除または置換する |
+| `src/app/` と `[tool.uv.build-backend]` | パッケージ名を変更する場合は配置と `module-name` を同時に更新し、CLI の参照先とテストの import も合わせる。配布名だけを変更するなら `app` を維持してよい |
+| `tests/test_app.py` | 挨拶表示の雛形テストを、変更した入口の期待結果に更新する |
+| `README.md` と `.devcontainer/devcontainer.json` | プロジェクト名、起動コマンド、コンテナ名・ボリューム名に残るテンプレート固有名を見直す |
+| OpenSpec の共通文書 | テンプレート基盤の説明と実際のコード・設定の一致を確認する。案件固有の業務要件は change に記載する |
+
+例えば配布名・CLI 名を `my-project` とし、Python パッケージ `app` を維持する場合は、次のように設定します。
+
+```toml
+[project]
+name = "my-project"
+# その他の既存設定は維持し、description 等をプロジェクトに合わせる
+
+[project.scripts]
+my-project = "app:main"
+```
+
+名前や設定を変更したら、ロックファイルを手編集せず、更新・同期して新しい CLI を起動します。
+
+```bash
+uv lock
+uv sync --locked
+npm ci
+uv run --locked my-project
+uv run --locked pytest
+npm run check
+```
+
+旧 CLI 名や `python_template` の参照が残っていないか検索し、由来の説明など意図的に残す箇所を確認してください。
+
 ## 3. 開発
 
 コミット前には高速な基礎検査を実行します。<br />
@@ -160,6 +197,12 @@ $openspec-explore [テーマ]
 $openspec-new-change [変更名]
 ```
 
+**change と capability は別の単位です。** change は一回の変更計画、capability は正式仕様として継続管理する能力です。一つの change で複数 capability を追加・変更できます。
+
+capability は主な観測結果、責務、入出力、検証対象を基準に分けます。処理の順番や実装モジュールごとに機械的に分割せず、独立して変更・レビューできる境界を選んでください。同じ横断要件を複数仕様へ複写せず、主な責務を持つ仕様を正本として、適用範囲と他仕様との関係を明記します。
+
+`openspec/specs/<capability-path>/spec.md` が一つの capability です。`data-processing/` の下に複数仕様を置いても、親の `data-processing/spec.md` は自動生成されません。全体案内は非規範的な `README.md` として作成し、子仕様へのリンク、分割理由、入出力、横断要件の正本を説明してください。詳しい配置基準と構成例は [プロジェクト構成](openspec/structure.md#複数-capability-の構成) を参照してください。
+
 
 #### 4.2.3. 補足資料を用意（任意）
 要件定義書、既存設計、調査結果などの補足資料がある場合は、`openspec/changes/変更名/input.md` に格納できます。<br />
@@ -202,26 +245,43 @@ $openspec-ff-change [変更名] input.md を要件の入力資料として参照
 
 | 成果物 | 記載する内容 |
 | --- | --- |
-| `proposal.md` | 目的、利用者・運用者、現行・変更後の業務フロー、対象・対象外、運用開始の受け入れ条件 |
+| `proposal.md` | 目的、利用者・運用者、現行・変更後の業務フロー、対象・対象外、`AC-001` 形式のIDを付けた運用開始の受け入れ条件 |
 | `spec.md` | 利用者または外部システムから観測できる要件とScenario、試験方針、要件に影響する未決事項 |
-| `design.md` | 業務フローを満たす責務、データ契約、失敗時の結果、技術判断、Scenarioごとの試験ケースID (`TC-001`) と確定後のpytest実装先 |
+| `design.md` | 業務フローを満たす責務、データ契約、失敗時の結果、技術判断、Scenarioごとの試験ケースID (`TC-001`) と確定後のpytest実装先、検証範囲・残る検証・証跡、全受け入れ条件の検証記録 |
 | `tasks.md` | 確定した設計から展開した実施作業と完了条件、要件ID・Scenario ID・TC-IDとの対応 |
 
 実装変更を伴う `Scenario` には、自動テストコードを作成します。<br />
 文書のみの変更など、テストコードが不要な場合は、`design.md` の「試験例外」に理由、承認者、期限を記録します。
 
-成果物の対応は、任意の時点で次のコマンドにより確認できます。<br />
-これはコミットごとには実行せず、設計レビュー、実装前、verify / archive 前、統合前に実行してください。
+成果物の対応は工程に応じて次のコマンドで確認します。コミットごとには実行せず、設計レビュー、実装前、実装後、verify / archive 前、統合前に使用してください。
 
 ```bash
-# 指定した変更を確認
+# 設計時: 対応と参照の書式を確認（未作成テスト・未完了タスクは許容）
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
 
-# 進行中の全変更を確認
-uv run --locked python scripts/check_openspec_traceability.py --all
+# 実装後: pytest による参照テストの収集可否も確認
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase implementation
+
+# 完了時: 全タスクと全受け入れ条件・証跡も確認
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase complete
+
+# 進行中の全変更を確認（npm run check にも含まれる）
+uv run --locked python scripts/check_openspec_traceability.py --all --phase implementation
 ```
 
-検査対象は、全REQ/NREQのScenario、設計書が参照する実在タスクとその要件ID、全ScenarioのTC-IDとpytest実装先、全TC-IDのpytestテスト作成・実行タスクです。
+全工程で、REQ/NREQとScenarioの所属・重複、設計が参照する実在タスクと要件ID、全ScenarioとTC-ID、試験設計のID整合、pytest参照書式、全TC-IDのテスト作成タスクを検査します。試験設計は従来の8列と、検証範囲・残る検証・証跡を追加した11列の両方を読み取れます。
+
+`implementation` と `complete` は、同じPython環境で `pytest --collect-only` を実行します。通常関数、パラメータ化関数、`tests/...py::TestExample::test_behavior` 形式のクラスメソッドを参照できます。テスト本体は実行しませんが、conftestやimportは実行します。収集できることと試験の成功は別に確認してください。
+
+自動テストがテストダブルによる契約だけを確認している場合、その成功を全CLI・実ライブラリ・実機・対象OSの検証完了と扱いません。試験設計に確認範囲と残る検証を記載し、必要な実機スモークや運用確認を別タスクとして実施します。
+
+受け入れ条件は proposal に `- AC-001: <条件>` の形式で記載し、design の「受け入れ検証」で全IDに次の6列を対応付けます。
+
+| 受け入れID | 検証範囲・条件 | 検証方法 | 残る検証 | 状態 | 証跡 |
+| --- | --- | --- | --- | --- | --- |
+| AC-001 | 対象OS・実ライブラリで全CLIが完了する | 実機でスモークを実行 | 実機スモーク未実施 | 未検証 | 未作成 |
+
+`complete` は全タスク完了、全AC-IDの状態「検証済み」、残る検証「なし」、リポジトリルート相対の空でない証跡ファイルを必須とします。証跡にコマンド・手順、実行日、環境・依存版、結果を残してください。検査は証跡の内容や検証範囲の十分性を保証しないため、レビュー時に内容を確認します。既存changeの完了検査には、このIDと表を補完します。
 
 
 #### 4.2.5. ドキュメント改善
@@ -244,6 +304,8 @@ $openspec-apply-change [変更名]
 $openspec-verify-change [変更名]
 ```
 
+verify 前に `--phase complete` の検査を通し、受け入れ条件の証跡を確認します。実機検証などが残る場合は未完了として扱います。
+
 
 #### 4.2.8. 仕様反映
 変更内容を正式仕様として反映します。
@@ -251,10 +313,22 @@ $openspec-verify-change [変更名]
 $openspec-archive-change [変更名]
 ```
 
-アーカイブ前には、OpenSpec の厳密検証とトレーサビリティ検査の両方を通します。
+アーカイブ前には、OpenSpec の厳密検証と完了段階のトレーサビリティ検査の両方を通します。
 ```bash
 npx --no-install openspec validate <change-name> --strict
-uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase complete
+```
+
+失敗した場合や、未完了タスク・未検証の受け入れ条件が残る場合はアーカイブせず、change を進行中に残します。正式仕様への反映だけが必要なら `$openspec-sync-specs [変更名]` を使います。
+
+通常の `--all` はアーカイブ済み変更を除外します。保存後の監査は明示して実行できます。
+
+```bash
+# 保存済みの一件を確認
+uv run --locked python scripts/check_openspec_traceability.py --change archive/<保存名> --phase complete
+
+# 進行中と保存済みの全変更を確認
+uv run --locked python scripts/check_openspec_traceability.py --all --include-archived --phase complete
 ```
 
 
