@@ -290,9 +290,9 @@ uv run --locked python scripts/check_openspec_traceability.py --all --phase impl
 
 | 受け入れID | タスクID | 延期理由 | 実施責任者 | 再開条件 | 追跡先 |
 | --- | --- | --- | --- | --- | --- |
-| AC-001 | 3.3 | 対象OSの実機を利用できない | 担当チーム名 | 対象OSの実機を利用できる時 | 課題管理の項目または後続change |
+| AC-001 | 3.3 | 対象OSの実機を利用できない | 担当チーム名 | 対象OSの実機を利用できる時 | README.md |
 
-この表は `## 延期する検証` の節に置きます。`limited-archive` は表のAC-IDと未完了タスク番号の対応、受け入れ状態、他タスクの完了、参照テストの収集を検査します。延期理由が本当に環境制約か、責任者・再開条件・追跡先が有効か、証跡の内容が十分かは人がレビューします。延期は検証済み・運用開始承認を意味しません。
+この表は `## 延期する検証` の節に置きます。「追跡先」は `README.md` などリポジトリ内の Markdown ファイルを指定します。GitHub Issue や別の OpenSpec change・spec の作成は必須ではありません。追跡先の `## 延期中の受け入れ確認` に change 名と AC-ID を同じ行に記録し、実施後は結果と証跡を追記して状態を更新します。詳細はアーカイブされた `archive-deferred.md` と design の「受け入れ検証」に残します。`limited-archive` は追跡先の行、表のAC-IDと未完了タスク番号の対応、受け入れ状態、他タスクの完了、参照テストの収集を検査します。延期理由が本当に環境制約か、責任者・再開条件が有効か、証跡の内容が十分かは人がレビューします。延期は検証済み・運用開始承認を意味しません。
 
 
 #### 4.2.5. ドキュメント改善
@@ -346,6 +346,13 @@ uv run --locked python scripts/check_openspec_traceability.py --change archive/<
 # 進行中と保存済みの全変更を確認
 uv run --locked python scripts/check_openspec_traceability.py --all --include-archived --phase complete
 ```
+
+## 延期中の受け入れ確認
+
+制限付きアーカイブ時に change 名と AC-ID を追記します。検証後はこの行の状態と証跡を更新し、アーカイブ内の受け入れ検証記録にも結果を反映します。追跡先を別のリポジトリ内 Markdown ファイルにする場合は、同じ見出しと一覧をそのファイルに置きます。
+
+| change | 受け入れID | 状態 | 記録 |
+| --- | --- | --- | --- |
 
 
 ## 5. 事前設定
