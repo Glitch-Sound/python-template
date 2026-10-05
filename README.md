@@ -262,8 +262,11 @@ uv run --locked python scripts/check_openspec_traceability.py --change <change-n
 # 実装後: pytest による参照テストの収集可否も確認
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase implementation
 
-# 完了時: 全タスクと全受け入れ条件・証跡も確認
+# 通常の完了時: 全タスクと全受け入れ条件・証跡も確認
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase complete
+
+# 制限付きアーカイブ時: 延期した受け入れ確認の引き継ぎも確認
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase limited-archive
 
 # 進行中の全変更を確認（npm run check にも含まれる）
 uv run --locked python scripts/check_openspec_traceability.py --all --phase implementation
@@ -282,6 +285,14 @@ uv run --locked python scripts/check_openspec_traceability.py --all --phase impl
 | AC-001 | 対象OS・実ライブラリで全CLIが完了する | 実機でスモークを実行 | 実機スモーク未実施 | 未検証 | 未作成 |
 
 `complete` は全タスク完了、全AC-IDの状態「検証済み」、残る検証「なし」、リポジトリルート相対の空でない証跡ファイルを必須とします。証跡にコマンド・手順、実行日、環境・依存版、結果を残してください。検査は証跡の内容や検証範囲の十分性を保証しないため、レビュー時に内容を確認します。既存changeの完了検査には、このIDと表を補完します。
+
+実機・対象OS等の環境を現時点で利用できず受け入れ確認だけが残る場合は、制限付きアーカイブを使用できます。実装・自動試験・品質確認は完了させ、延期する確認タスクだけを未完了のまま残します。change 直下の `archive-deferred.md` に次の表を作成し、1行に1つの未完了タスクを記載します。延期するAC-IDは design の「受け入れ検証」で「未検証」とし、「残る検証」に具体的な内容を残します。
+
+| 受け入れID | タスクID | 延期理由 | 実施責任者 | 再開条件 | 追跡先 |
+| --- | --- | --- | --- | --- | --- |
+| AC-001 | 3.3 | 対象OSの実機を利用できない | 担当チーム名 | 対象OSの実機を利用できる時 | 課題管理の項目または後続change |
+
+この表は `## 延期する検証` の節に置きます。`limited-archive` は表のAC-IDと未完了タスク番号の対応、受け入れ状態、他タスクの完了、参照テストの収集を検査します。延期理由が本当に環境制約か、責任者・再開条件・追跡先が有効か、証跡の内容が十分かは人がレビューします。延期は検証済み・運用開始承認を意味しません。
 
 
 #### 4.2.5. ドキュメント改善
@@ -304,7 +315,7 @@ $openspec-apply-change [変更名]
 $openspec-verify-change [変更名]
 ```
 
-verify 前に `--phase complete` の検査を通し、受け入れ条件の証跡を確認します。実機検証などが残る場合は未完了として扱います。
+verify 前に通常は `--phase complete` を通し、受け入れ条件の証跡を確認します。実機検証などを延期する場合は `--phase limited-archive` を通し、残る検証と引き継ぎを確認します。
 
 
 #### 4.2.8. 仕様反映
@@ -313,19 +324,24 @@ verify 前に `--phase complete` の検査を通し、受け入れ条件の証�
 $openspec-archive-change [変更名]
 ```
 
-アーカイブ前には、OpenSpec の厳密検証と完了段階のトレーサビリティ検査の両方を通します。
+アーカイブ前には、OpenSpec の厳密検証と該当するトレーサビリティ検査の両方を通します。
 ```bash
 npx --no-install openspec validate <change-name> --strict
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase complete
+# 制限付きアーカイブの場合はこちらを実行
+uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase limited-archive
 ```
 
-失敗した場合や、未完了タスク・未検証の受け入れ条件が残る場合はアーカイブせず、change を進行中に残します。正式仕様への反映だけが必要なら `$openspec-sync-specs [変更名]` を使います。
+通常の完了検査が失敗した場合は、実機等の受け入れ検証だけが残るかを確認します。制限付きアーカイブでは `archive-deferred.md` の延期理由、実施責任者、再開条件、追跡先と残るリスクをレビューし、利用者の明示的な了承を得てからアーカイブします。実装・自動試験・品質確認の未完了や重要な未解決事項があれば進行中に残します。正式仕様への反映だけが必要なら `$openspec-sync-specs [変更名]` を使います。
 
 通常の `--all` はアーカイブ済み変更を除外します。保存後の監査は明示して実行できます。
 
 ```bash
 # 保存済みの一件を確認
 uv run --locked python scripts/check_openspec_traceability.py --change archive/<保存名> --phase complete
+
+# 制限付きで保存した一件を確認
+uv run --locked python scripts/check_openspec_traceability.py --change archive/<保存名> --phase limited-archive
 
 # 進行中と保存済みの全変更を確認
 uv run --locked python scripts/check_openspec_traceability.py --all --include-archived --phase complete
