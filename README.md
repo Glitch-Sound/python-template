@@ -67,6 +67,8 @@ uv run python-template
 | `README.md` と `.devcontainer/devcontainer.json` | プロジェクト名、起動コマンド、コンテナ名・ボリューム名に残るテンプレート固有名を見直す |
 | OpenSpec の共通文書 | テンプレート基盤の説明と実際のコード・設定の一致を確認する。案件固有の業務要件は change に記載する |
 
+`src/app/` の構成は、仕様、入出力、変更理由、依存関係から責務を見つけてから決めます。独立して変更・検証する能力が明確なら `src/app/<capability>/` に関連するCLI入口と処理をまとめ、複数能力で実際に共有する契約や基盤だけを `src/app/common/` に置きます。小規模なうちは分割を強制しません。能力とパッケージの対応、依存方向、配置の判断基準、確認項目と仮の構成例は [アプリケーションの責務と配置](openspec/structure.md#アプリケーションの責務と配置) を参照してください。
+
 例えば配布名・CLI 名を `my-project` とし、Python パッケージ `app` を維持する場合は、次のように設定します。
 
 ```toml
@@ -452,7 +454,7 @@ python-template/
 ├── scripts/              # リポジトリ運用・OpenSpec検査スクリプト
 │
 ├── src/
-│   └── app/
+│   └── app/                # 現在は __init__.py のサンプルCLIのみ
 │
 ├── tests/
 │
