@@ -22,7 +22,7 @@ uv sync --locked
 npm ci
 ```
 
-### Dev Container（任意）
+### Dev Container (任意)
 
 Docker で開発したい場合は、Docker Engine と Dev Containers に対応したエディターを用意し、このリポジトリをコンテナで再度開いてください。<br />
 VS Code では Dev Containers 拡張機能の **Reopen in Container** を使用します。
@@ -36,7 +36,7 @@ uv sync --locked
 npm ci
 ```
 
-### OpenSpec 更新（任意）
+### OpenSpec 更新 (任意)
 
 OpenSpec を更新する場合は、先にプロジェクトローカルの CLI とロックファイルを更新してから、生成済みの agent 用 instructions を更新します。<br />
 CLI を更新せずに `openspec update` だけを実行しても、新しいワークフローは導入されません。<br />
@@ -62,7 +62,7 @@ uv run python-template
 | 用語 | 意味 |
 | --- | --- |
 | OpenSpec change | 一回の変更を計画・実装・検証するための成果物一式。継続して管理する能力とは別の単位 |
-| capability（仕様上の能力） | 利用者や外部システムに提供する、継続管理する機能・責務の単位。正式仕様は `openspec/specs/<capability-path>/spec.md` に置く |
+| capability (仕様上の能力) | 利用者や外部システムに提供する、継続管理する機能・責務の単位。正式仕様は `openspec/specs/<capability-path>/spec.md` に置く |
 | 能力別パッケージ | 変更・検証の境界に合わせて作る `src/app/<capability>/`。仕様上のcapabilityと同じ数・名前にする必要はない |
 | 共有契約 | 複数の能力の間で受け渡す型、保存形式、パスなどの取り決め |
 | 受け入れ条件 | 変更が利用者・運用者の目的を満たしたと判断する条件。proposalでは `AC-001` 形式のIDを付ける |
@@ -124,6 +124,7 @@ npm run check
 READMEなどの日本語の案内文書では、本文に複数の文を書くとき、原則として文末の句点の直後で改行します。<br />
 同じ段落を続ける場合は、この段落のように `。<br />` と改行を使い、段落を分ける場合は空行を入れます。<br />
 表のセル、コードブロック、見出しなど、改行で読みづらくなる箇所は例外です。<br />
+括弧は半角の `(` と `)` を使います。<br />
 派生プロジェクトでもこの書き方をREADMEと案内文書に引き継いでください。
 
 コミット前には高速な基礎検査を実行します。<br />
@@ -247,7 +248,7 @@ capability は主な観測結果、責務、入出力、検証対象を基準に
 詳しい配置基準と構成例は [プロジェクト構成](openspec/structure.md#複数-capability-の構成) を参照してください。
 
 
-#### 4.2.3. 補足資料を用意（任意）
+#### 4.2.3. 補足資料を用意 (任意)
 要件定義書、既存設計、調査結果などの補足資料がある場合は、`openspec/changes/変更名/input.md` に格納できます。<br />
 `input.md` は OpenSpec が自動で読み込むファイルではないため、次の工程で「`input.md` を参照する」と明示して使用してください。
 
@@ -303,7 +304,7 @@ $openspec-ff-change [変更名] input.md を要件の入力資料として参照
 コミットごとには実行せず、設計レビュー、実装前、実装後、verify / archive 前、統合前に使用してください。
 
 ```bash
-# 設計時: 対応と参照の書式を確認（未作成テスト・未完了タスクは許容）
+# 設計時: 対応と参照の書式を確認 (未作成テスト・未完了タスクは許容)
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name>
 
 # 実装後: pytest による参照テストの収集可否も確認
@@ -315,7 +316,7 @@ uv run --locked python scripts/check_openspec_traceability.py --change <change-n
 # 制限付きアーカイブ時: 延期した受け入れ確認の引き継ぎも確認
 uv run --locked python scripts/check_openspec_traceability.py --change <change-name> --phase limited-archive
 
-# 進行中の全変更を確認（npm run check にも含まれる）
+# 進行中の全変更を確認 (npm run check にも含まれる)
 uv run --locked python scripts/check_openspec_traceability.py --all --phase implementation
 ```
 
@@ -499,7 +500,7 @@ npm install --save-dev @fission-ai/openspec@latest
 npx --no-install openspec init --tools codex,claude
 ```
 
-標準 profile に含まれないワークフロー（`new`、`continue`、`ff`、`verify`、`bulk-archive`、`onboard` など）が必要な場合は、profile で選択してから生成済み instruction を更新します。<br />
+標準 profile に含まれないワークフロー (`new`、`continue`、`ff`、`verify`、`bulk-archive`、`onboard` など) が必要な場合は、profile で選択してから生成済み instruction を更新します。<br />
 選択肢は OpenSpec のバージョンにより変わるため、対話プロンプトの表示例を固定せず、コマンドの案内に従って選択してください。
 
 ```bash
