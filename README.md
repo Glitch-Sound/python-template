@@ -410,6 +410,17 @@ uv run --locked python scripts/check_openspec_traceability.py --change archive/<
 uv run --locked python scripts/check_openspec_traceability.py --all --include-archived --phase complete
 ```
 
+
+#### 4.2.9. 最新仕様とソースコードの整合性確認
+最後に、正式仕様である `openspec/specs/` の要件・Scenarioを `src/` の実装と `tests/` の検証内容に照らして確認します。<br />
+仕様に対応する実装・テストの不足と、仕様に記載されていない外部から観測できる振る舞いを洗い出し、差異があれば該当ファイルと内容を記録して解消します。
+
+```text
+openspec/specs/ の最新仕様をすべて読み、各要件・Scenarioと src/ の実装、tests/ の検証内容を双方向に照合してください。
+不足や矛盾があれば、仕様とコードの該当箇所を示して報告してください。
+```
+
+
 ## 延期中の受け入れ確認
 
 制限付きアーカイブ時に change 名、AC-ID、状態「未検証」、`タスクX.Y: <確認内容>` を追記します。<br />
